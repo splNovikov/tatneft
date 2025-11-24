@@ -20,7 +20,6 @@ function parsePhaseDiagram(content: string): Phase[] {
   const lines = content.split('\n');
   
   let currentPhase: Phase | null = null;
-  let inBox = false;
   
   for (const line of lines) {
     const trimmed = line.trim();
@@ -28,11 +27,6 @@ function parsePhaseDiagram(content: string): Phase[] {
     // Skip empty lines and arrows
     if (!trimmed || trimmed === '↓' || trimmed.match(/^─+$/)) {
       continue;
-    }
-    
-    // Start of a box
-    if (trimmed.includes('┌──') || (trimmed.startsWith('│') && !trimmed.includes('ФАЗА'))) {
-      inBox = true;
     }
     
     // Extract phase title (ФАЗА 1: ... or ФАЗА 2: ...)
@@ -46,7 +40,6 @@ function parsePhaseDiagram(content: string): Phase[] {
         title: phaseMatch[2].trim(),
         items: [],
       };
-      inBox = true;
       continue;
     }
     
@@ -70,7 +63,6 @@ function parsePhaseDiagram(content: string): Phase[] {
         phases.push(currentPhase);
         currentPhase = null;
       }
-      inBox = false;
     }
   }
   

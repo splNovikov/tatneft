@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Typography } from 'antd';
 import type { Slide } from '~shared/lib/presentation.types';
 import { SlideContentRenderer } from './slide-content';
@@ -49,14 +50,14 @@ export function Slide({ slide }: SlideProps) {
     }
 
     // For goal slide, wrap first text elements in container
-    const elements: JSX.Element[] = [];
+    const elements: ReactElement[] = [];
     let i = 0;
     let textWrapped = false;
 
     while (i < slide.content.length) {
       // Wrap first consecutive text elements in goal container
       if (!textWrapped && slide.content[i].type === 'text') {
-        const textElements: JSX.Element[] = [];
+        const textElements: ReactElement[] = [];
         while (i < slide.content.length && slide.content[i].type === 'text') {
           textElements.push(
             <SlideContentRenderer key={i} content={slide.content[i]} />
