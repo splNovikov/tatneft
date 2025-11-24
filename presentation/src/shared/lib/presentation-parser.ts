@@ -124,7 +124,7 @@ function parseSlide(section: string[], slideNumber: number): Slide {
     
     // Extract title from first ## heading
     if (i === 0 && trimmed.startsWith('## ')) {
-      title = trimmed.replace(/^##+\s*/, '');
+      title = trimmed.replace(/^##+\s*/, '').trim();
       continue;
     }
     
@@ -223,6 +223,16 @@ function parseSlide(section: string[], slideNumber: number): Slide {
     }
     
     // Headings
+    // Handle ## headings (level 2) that are not the slide title
+    if (trimmed.startsWith('## ') && i > 0) {
+      content.push({
+        type: 'heading',
+        content: trimmed.replace(/^##+\s*/, '').trim(),
+      });
+      continue;
+    }
+    
+    // Handle ### headings (level 3)
     if (trimmed.startsWith('### ')) {
       content.push({
         type: 'heading',

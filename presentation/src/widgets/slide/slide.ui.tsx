@@ -37,6 +37,52 @@ export function Slide({ slide }: SlideProps) {
     );
   }
 
+  // Check if slide title is "Цель проекта" and wrap first text elements
+  const isGoalSlide = slide.title.toLowerCase().includes('цель проекта');
+
+  const renderContent = () => {
+    if (!isGoalSlide) {
+      // Not a goal slide, render normally
+      return slide.content.map((content, index) => (
+        <SlideContentRenderer key={index} content={content} />
+      ));
+    }
+
+    // For goal slide, wrap first text elements in container
+    const elements: JSX.Element[] = [];
+    let i = 0;
+    let textWrapped = false;
+
+    while (i < slide.content.length) {
+      // Wrap first consecutive text elements in goal container
+      if (!textWrapped && slide.content[i].type === 'text') {
+        const textElements: JSX.Element[] = [];
+        while (i < slide.content.length && slide.content[i].type === 'text') {
+          textElements.push(
+            <SlideContentRenderer key={i} content={slide.content[i]} />
+          );
+          i++;
+        }
+        
+        if (textElements.length > 0) {
+          elements.push(
+            <div key="goal-text" className={styles.goalContainer}>
+              {textElements}
+            </div>
+          );
+          textWrapped = true;
+        }
+      } else {
+        elements.push(
+          <SlideContentRenderer key={i} content={slide.content[i]} />
+        );
+        i++;
+      }
+    }
+
+    return elements;
+  };
+
   return (
     <div className={styles.slide}>
       <div className={styles.slideHeader}>
@@ -45,11 +91,7 @@ export function Slide({ slide }: SlideProps) {
         </Title>
       </div>
       
-      <div className={styles.slideContent}>
-        {slide.content.map((content, index) => (
-          <SlideContentRenderer key={index} content={content} />
-        ))}
-      </div>
+      <div className={styles.slideContent}>{renderContent()}</div>
     </div>
   );
 }

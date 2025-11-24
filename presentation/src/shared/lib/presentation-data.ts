@@ -7,13 +7,17 @@ let cachedPresentation: ReturnType<typeof parsePresentation> | null = null;
  * Loads and parses presentation data
  */
 export async function loadPresentationData() {
-  if (cachedPresentation) {
+  // In development, always reload to see latest changes
+  const isDevelopment = import.meta.env.DEV;
+  if (cachedPresentation && !isDevelopment) {
     return cachedPresentation;
   }
   
   try {
     // Try to load from public folder first
-    const response = await fetch('/Phase-1-Presentation.md');
+    // Add cache busting in development
+    const cacheBuster = isDevelopment ? `?t=${Date.now()}` : '';
+    const response = await fetch(`/Phase-1-Presentation.md${cacheBuster}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
