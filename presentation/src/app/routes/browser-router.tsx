@@ -13,19 +13,27 @@ export function BrowserRouter() {
   return <RouterProvider router={browserRouter} />;
 }
 
-const browserRouter = createBrowserRouter([
+// Get base path from Vite's import.meta.env.BASE_URL
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || undefined;
+
+const browserRouter = createBrowserRouter(
+  [
+    {
+      errorElement: <BubbleError />,
+      HydrateFallback: () => <Spinner tip="Thinking..." />,
+      children: [
+        ...createRoutesFromManifest(routesManifest),
+        {
+          path: '*',
+          loader: async () => redirect(pathKeys.page404),
+        },
+      ],
+    },
+  ],
   {
-    errorElement: <BubbleError />,
-    HydrateFallback: () => <Spinner tip="Thinking..." />,
-    children: [
-      ...createRoutesFromManifest(routesManifest),
-      {
-        path: '*',
-        loader: async () => redirect(pathKeys.page404),
-      },
-    ],
-  },
-]);
+    basename,
+  }
+);
 
 // https://github.com/remix-run/react-router/discussions/10166
 function BubbleError(): null {

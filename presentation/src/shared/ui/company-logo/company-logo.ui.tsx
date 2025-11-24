@@ -12,7 +12,9 @@ export function CompanyLogo() {
     const img = new Image();
     img.onload = () => setImageLoaded(true);
     img.onerror = () => setImageError(true);
-    img.src = '/logo-proxima.png';
+    // Use import.meta.env.BASE_URL to support GitHub Pages base path
+    const baseUrl = import.meta.env.BASE_URL;
+    img.src = `${baseUrl}logo-proxima.png`;
   }, []);
 
   return (

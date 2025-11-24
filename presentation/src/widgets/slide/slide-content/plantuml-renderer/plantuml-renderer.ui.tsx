@@ -26,7 +26,9 @@ export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendere
         // Load from file if path is provided
         if (plantumlPath) {
           try {
-            const response = await fetch(`/diagrams/${plantumlPath}`);
+            // Use import.meta.env.BASE_URL to support GitHub Pages base path
+            const baseUrl = import.meta.env.BASE_URL;
+            const response = await fetch(`${baseUrl}diagrams/${plantumlPath}`);
             if (!response.ok) {
               throw new Error(`Failed to load PlantUML file: ${response.statusText}`);
             }

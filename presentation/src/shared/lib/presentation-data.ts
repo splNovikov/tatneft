@@ -16,8 +16,10 @@ export async function loadPresentationData() {
   try {
     // Try to load from public folder first
     // Add cache busting in development
+    // Use import.meta.env.BASE_URL to support GitHub Pages base path
+    const baseUrl = import.meta.env.BASE_URL;
     const cacheBuster = isDevelopment ? `?t=${Date.now()}` : '';
-    const response = await fetch(`/Phase-1-Presentation.md${cacheBuster}`);
+    const response = await fetch(`${baseUrl}Phase-1-Presentation.md${cacheBuster}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`);
     }
