@@ -8,17 +8,6 @@
   position: relative;
 }
 
-.companyName {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1000;
-  font-size: 18px;
-  font-weight: 600;
-  color: #000000;
-  letter-spacing: 0.5px;
-  pointer-events: none;
-}
 
 .slideWrapper {
   flex: 1;

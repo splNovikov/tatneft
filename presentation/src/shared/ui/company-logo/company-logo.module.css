@@ -1,0 +1,39 @@
+.logoContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+  filter: brightness(0);
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+  display: block;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .logoContainer {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .logo {
+    height: 24px;
+  }
+
+  .logoText {
+    font-size: 16px;
+  }
+}
+

@@ -2,6 +2,7 @@ import { Suspense, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorHandler, { logError } from '~shared/ui/error-handler';
 import Spinner from '~shared/ui/spinner';
+import { CompanyLogo } from '~shared/ui/company-logo';
 import { Slide } from '~widgets/slide';
 import { PresentationNavigation, usePresentationNavigation } from '../presentation-navigation';
 import type { Presentation } from '~shared/lib/presentation.types';
@@ -34,7 +35,7 @@ export function PresentationContainer({ presentation }: PresentationContainerPro
   return (
     <ErrorBoundary FallbackComponent={ErrorHandler} onError={logError}>
       <div className={styles.container}>
-        <div className={styles.companyName}>ПРОКСИМА</div>
+        <CompanyLogo />
         <div className={styles.slideWrapper}>
           <Suspense fallback={<Spinner tip="Загрузка слайда..." />}>
             <Slide slide={currentSlideData} />
