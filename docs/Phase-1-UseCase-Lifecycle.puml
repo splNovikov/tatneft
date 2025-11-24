@@ -1,0 +1,311 @@
+@startuml UseCase_Sequence_HighPressure
+!theme plain
+skinparam sequenceMessageAlign center
+skinparam sequenceArrowThickness 2
+
+title Use Case: Анализ аварийного сигнала "Высокое давление на приеме насосов"
+
+actor "Диспетчер\nЕДС" as Dispatcher
+participant "ЕССД/\nАСДКУ" as ESSD
+participant "Система анализа\nсигналов" as System
+participant "ИС МЕГА/\nПроток" as Mega
+participant "КИС Армитс" as Armits
+participant "1С ТОиР" as TOIR
+participant "СЭД" as SED
+participant "Мастер\nЦДНГ" as Master
+participant "Руководство\nЦДНГ" as Manager
+
+== Поступление и регистрация сигнала ==
+ESSD -> System: Аварийный сигнал\n"Высокое давление на приеме Н-1"
+activate System
+System -> System: Сохранение сигнала в БД
+System -> System: Быстрая проверка состояния\nоборудования
+System -> Dispatcher: Уведомление о новом сигнале
+activate Dispatcher
+
+== Запуск анализа ==
+Dispatcher -> System: Запрос на анализ объекта ДНС-123
+activate System
+System -> System: Создание задачи анализа
+
+== Сбор данных ==
+System -> ESSD: Получение списка сигналов\nза период
+ESSD --> System: Список сигналов
+
+System -> Mega: Получение исторических данных\nдавления (2 месяца)
+activate Mega
+Mega --> System: Временные ряды давления
+
+System -> Mega: Получение данных уровня\nв емкости
+Mega --> System: Данные уровня
+
+System -> Armits: Получение объемов перекачки\nи прогнозов
+activate Armits
+Armits --> System: Объемы перекачки
+
+System -> TOIR: Получение метаданных\nнасоса Н-1
+activate TOIR
+TOIR --> System: Паспортные данные\n(ЦНС-60-250, макс. 0.6 МПа)
+
+System -> SED: Получение текущих уставок\nсигнализации
+activate SED
+SED --> System: Уставки (Pmax=0.40 МПа)
+
+deactivate Mega
+deactivate Armits
+deactivate TOIR
+deactivate SED
+
+== Анализ данных ==
+System -> System: Анализ трендов\n(среднее, мин, макс, сравнение)
+System -> System: Проверка соответствия уставок\n(факт vs уставка vs норматив)
+System -> System: Проверка состояния оборудования\n(насос работает, емкость в работе)
+
+== Генерация рекомендаций ==
+System -> System: Формирование рекомендации:\n"Увеличить уставку до 0.46 МПа"
+System -> System: Сохранение результатов анализа
+
+== Уведомления ==
+System -> Master: Email: Новые рекомендации\nпо объекту ДНС-123
+activate Master
+System -> Manager: Email: Рекомендация высокого\nприоритета
+activate Manager
+
+== Просмотр и принятие решения ==
+Master -> System: Просмотр результатов анализа
+System --> Master: Результаты анализа\nи рекомендации
+
+Master -> Manager: Информирование о рекомендации
+Manager -> System: Просмотр деталей рекомендации
+System --> Manager: Детальная информация\nс обоснованием
+
+Manager -> System: Принятие рекомендации\n(статус: accepted)
+System -> System: Обновление статуса рекомендации
+
+== Применение рекомендации ==
+Manager -> System: Формирование заявки\nдля ООО «ПЦ»
+System -> System: Создание заявки на изменение\nуставок в АСУТП
+
+note right of System
+  ООО «ПЦ» изменяет уставки
+  в АСУТП: 0.40 → 0.46 МПа
+end note
+
+== Подтверждение ==
+System -> System: Мониторинг новых сигналов\nпо параметру
+System -> System: Проверка эффективности\n(снижение количества сработок)
+System -> Manager: Уведомление: Рекомендация\nприменена успешно
+
+deactivate System
+deactivate Dispatcher
+deactivate Master
+deactivate Manager
+
+@enduml
+
+@startuml UseCase_Activity_HighPressure
+!theme plain
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+    FontColor #2E5C8A
+}
+skinparam arrowColor #2E5C8A
+
+title Диаграмма активности: Анализ аварийного сигнала
+
+start
+
+:Поступление аварийного сигнала\n"Высокое давление на приеме Н-1";
+note right: Источник: ЕССД/АСДКУ
+
+:Регистрация сигнала в системе;
+:Быстрая проверка состояния оборудования;
+
+if (Оборудование в работе?) then (да)
+  :Сигнал помечен как "реальный";
+else (нет)
+  :Сигнал помечен как "ложный";
+  :Формирование рекомендации\n"Отключить сигналы";
+  stop
+endif
+
+:Запуск полного анализа объекта;
+
+partition "Сбор данных" {
+  :Загрузка исторических данных\nдавления за 2 месяца;
+  :Загрузка данных уровня в емкости;
+  :Загрузка объемов перекачки;
+  :Загрузка метаданных оборудования;
+  :Загрузка текущих уставок;
+}
+
+partition "Анализ трендов" {
+  :Расчет статистики текущего месяца:\nсреднее, мин, макс;
+  :Расчет статистики предыдущего месяца;
+  :Сравнение периодов;
+  :Выявление трендов;
+}
+
+partition "Проверка уставок" {
+  :Получение фактических параметров:\nсреднее = 0.34 МПа\nмакс = 0.42 МПа;
+  :Получение текущей уставки:\nPmax = 0.40 МПа;
+  :Получение допустимого максимума:\n0.6 МПа (из паспорта);
+  
+  if (Уставка < Фактический макс?) then (да)
+    :Несоответствие выявлено;
+    :Расчет рекомендуемой уставки:\n0.42 + 10% = 0.46 МПа;
+  else (нет)
+    :Уставки соответствуют;
+  endif
+}
+
+partition "Проверка состояния" {
+  :Проверка работы насоса;
+  :Проверка работы емкости;
+  :Проверка корреляции параметров;
+}
+
+partition "Генерация рекомендаций" {
+  :Анализ всех результатов;
+  if (Найдены проблемы?) then (да)
+    :Формирование рекомендации:\n"Увеличить уставку до 0.46 МПа";
+    :Определение приоритета: Высокий;
+    :Определение адресата: Руководство ЦДНГ;
+  else (нет)
+    :Рекомендации не требуются;
+  endif
+}
+
+:Сохранение результатов в БД;
+:Отправка уведомлений пользователям;
+
+partition "Принятие решения" {
+  :Мастер ЦДНГ просматривает результаты;
+  :Руководство ЦДНГ принимает решение;
+  
+  if (Рекомендация принята?) then (да)
+    :Формирование заявки для ООО «ПЦ»;
+    :Изменение уставок в АСУТП;
+    :Обновление уставок в системе;
+    :Мониторинг эффективности;
+    
+    if (Сработки снизились?) then (да)
+      :Рекомендация применена успешно;
+      stop
+    else (нет)
+      :Требуется дополнительный анализ;
+    endif
+  else (нет)
+    :Рекомендация отклонена;
+    :Сохраняется в истории;
+    stop
+  endif
+}
+
+stop
+
+@enduml
+
+@startuml UseCase_State_HighPressure
+!theme plain
+skinparam state {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+    FontColor #2E5C8A
+}
+
+title Диаграмма состояний: Жизненный цикл аварийного сигнала
+
+[*] --> SignalReceived : Поступление сигнала\nот ЕССД/АСДКУ
+
+state SignalReceived {
+  [*] --> Registered
+  Registered : Сохранен в БД
+  Registered --> QuickCheck
+  QuickCheck : Быстрая проверка\nсостояния оборудования
+}
+
+SignalReceived --> Classified : Проверка завершена
+
+state Classified {
+  [*] --> RealAlarm
+  [*] --> FalseAlarm
+  
+  RealAlarm : Реальный сигнал
+  FalseAlarm : Ложный сигнал
+}
+
+Classified --> AnalysisQueued : Реальный сигнал\nдобавлен в очередь
+
+state AnalysisQueued {
+  [*] --> Waiting
+  Waiting : Ожидание обработки
+  Waiting --> InProgress : Запуск анализа
+}
+
+AnalysisQueued --> AnalysisInProgress : Анализ начат
+
+state AnalysisInProgress {
+  [*] --> DataCollection
+  DataCollection : Сбор данных\nиз внешних систем
+  DataCollection --> TrendAnalysis
+  TrendAnalysis : Анализ трендов
+  TrendAnalysis --> ThresholdValidation
+  ThresholdValidation : Проверка уставок
+  ThresholdValidation --> EquipmentCheck
+  EquipmentCheck : Проверка состояния\nоборудования
+  EquipmentCheck --> RecommendationGeneration
+  RecommendationGeneration : Генерация рекомендаций
+}
+
+AnalysisInProgress --> AnalysisCompleted : Анализ завершен
+
+state AnalysisCompleted {
+  [*] --> ResultsReady
+  ResultsReady : Результаты готовы
+  ResultsReady --> NotificationsSent
+  NotificationsSent : Уведомления отправлены
+}
+
+AnalysisCompleted --> RecommendationCreated : Рекомендация создана
+
+state RecommendationCreated {
+  [*] --> New
+  New : Новая рекомендация
+  New --> UnderReview : На рассмотрении
+  UnderReview --> Accepted : Принята
+  UnderReview --> Rejected : Отклонена
+}
+
+RecommendationCreated --> RecommendationAccepted : Принята руководством
+
+state RecommendationAccepted {
+  [*] --> RequestCreated
+  RequestCreated : Заявка создана\nдля ООО «ПЦ»
+  RequestCreated --> InImplementation
+  InImplementation : В процессе реализации
+  InImplementation --> Applied
+  Applied : Уставки изменены\nв АСУТП
+}
+
+RecommendationAccepted --> Monitoring : Мониторинг эффективности
+
+state Monitoring {
+  [*] --> Checking
+  Checking : Проверка количества\nновых сработок
+  Checking --> Effective
+  Checking --> NotEffective
+  
+  Effective : Эффективность подтверждена
+  NotEffective : Требуется\nдополнительный анализ
+}
+
+Monitoring --> [*] : Процесс завершен
+
+FalseAlarm --> [*] : Ложный сигнал\nобработан
+
+Rejected --> [*] : Рекомендация отклонена
+
+@enduml
+
