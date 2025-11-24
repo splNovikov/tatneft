@@ -1,0 +1,22 @@
+.loading,
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #020a1c;
+}
+
+.error {
+  color: #ff4d4f;
+}
+
+.error h2 {
+  margin-bottom: 16px;
+}
+
+.error p {
+  color: #666;
+}
+

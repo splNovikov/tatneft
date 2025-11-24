@@ -1,0 +1,105 @@
+.heading {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.heading:first-child {
+  margin-top: 0;
+}
+
+.text {
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.codeBlock {
+  background: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 16px;
+  margin: 16px 0;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.codeBlock code {
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+.tableWrapper {
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.tableWrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.tableWrapper th,
+.tableWrapper td {
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: left;
+}
+
+.tableWrapper th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.listWrapper {
+  margin: 16px 0;
+}
+
+.listWrapper ul,
+.listWrapper ol {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.listWrapper li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.markdown-list {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.markdown-list li {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.diagramWrapper {
+  margin: 24px 0;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.diagram {
+  margin: 0;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.diagram code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  color: #666;
+}
+
