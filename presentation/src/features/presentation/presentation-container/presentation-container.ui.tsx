@@ -33,6 +33,7 @@ export function PresentationContainer({ presentation }: PresentationContainerPro
   return (
     <ErrorBoundary FallbackComponent={ErrorHandler} onError={logError}>
       <div className={styles.container}>
+        <div className={styles.companyName}>ПРОКСИМА</div>
         <div className={styles.slideWrapper}>
           <Suspense fallback={<Spinner tip="Загрузка слайда..." />}>
             <Slide slide={currentSlideData} />
