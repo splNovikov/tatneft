@@ -534,3 +534,142 @@ stop
 
 ---
 
+## Слайд 8: Отказоустойчивость и стабильность системы
+
+### Архитектурные решения для надежности
+
+**1. Горизонтальное масштабирование**
+- Множественные экземпляры сервисов
+- Автоматическое масштабирование под нагрузку
+- Распределение нагрузки между серверами
+- **Результат:** Система выдерживает пиковые нагрузки
+
+**2. Резервирование компонентов**
+- Репликация баз данных (master-slave)
+- Резервные копии данных
+- Избыточность сервисов
+- **Результат:** Отказ одного компонента не останавливает систему
+
+**3. Обработка ошибок и retry**
+- Автоматические повторы при сбоях внешних систем
+- Circuit breaker для защиты от каскадных отказов
+- Graceful degradation (деградация с сохранением функциональности)
+- **Результат:** Система продолжает работать при сбоях интеграций
+
+**4. Асинхронная обработка**
+- Очереди задач для длительных операций
+- Фоновые процессы для анализа
+- Неблокирующая обработка запросов
+- **Результат:** Высокая отзывчивость интерфейсов
+
+**5. Кэширование данных**
+- Кэш часто запрашиваемых данных
+- Снижение нагрузки на внешние системы
+- Быстрый отклик для пользователей
+- **Результат:** Стабильная производительность
+
+**6. Мониторинг и алертинг**
+- Отслеживание состояния всех компонентов
+- Автоматические уведомления о проблемах
+- Метрики производительности
+- **Результат:** Быстрое выявление и устранение проблем
+
+### Гарантии стабильности
+
+✅ **Доступность:** 99.5% uptime  
+✅ **Производительность:** Обработка до 1000 объектов параллельно  
+✅ **Масштабируемость:** Автоматическое добавление ресурсов  
+✅ **Восстановление:** Автоматический перезапуск упавших сервисов
+
+### Диаграмма: Архитектура отказоустойчивости
+
+```plantuml
+@startuml Slide8_Resilience
+!theme plain
+skinparam componentStyle rectangle
+
+package "Load Balancer" {
+  component [Load Balancer] as LB
+}
+
+package "Application Servers" {
+  component [API Server 1] as API1
+  component [API Server 2] as API2
+  component [API Server N] as APIN
+  component [Analysis Worker 1] as W1
+  component [Analysis Worker 2] as W2
+  component [Analysis Worker N] as WN
+}
+
+package "Message Queue" {
+  queue [Task Queue] as Queue
+  database [Redis Cache] as Cache
+}
+
+package "Databases" {
+  database [PostgreSQL\nMaster] as DB1
+  database [PostgreSQL\nReplica] as DB2
+  database [TimescaleDB\nCluster] as TSDB
+}
+
+package "External Systems" {
+  component [АСДКУ] as ASDKU
+  component [ИС МЕГА] as MEGA
+  component [ЕССД] as ESSD
+}
+
+LB --> API1
+LB --> API2
+LB --> APIN
+
+API1 --> Queue
+API2 --> Queue
+APIN --> Queue
+
+Queue --> W1
+Queue --> W2
+Queue --> WN
+
+W1 --> Cache
+W2 --> Cache
+WN --> Cache
+
+W1 --> DB1
+W2 --> DB1
+WN --> DB1
+
+DB1 --> DB2 : replication
+
+W1 --> TSDB
+W2 --> TSDB
+WN --> TSDB
+
+W1 --> ASDKU
+W1 --> MEGA
+W1 --> ESSD
+
+note right of LB
+  Горизонтальное
+  масштабирование
+end note
+
+note right of DB1
+  Репликация
+  для отказоустойчивости
+end note
+
+note right of Queue
+  Асинхронная
+  обработка задач
+end note
+
+note right of Cache
+  Кэширование
+  для производительности
+end note
+
+@enduml
+```
+
+---
+
