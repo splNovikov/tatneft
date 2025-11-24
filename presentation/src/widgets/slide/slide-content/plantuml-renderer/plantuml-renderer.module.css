@@ -8,8 +8,8 @@
   /*background: #2d2d2d;*/
   /*border: 2px solid #52c41a;*/
   border-radius: 4px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0 20px;
+  /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);*/
   font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
 }
 

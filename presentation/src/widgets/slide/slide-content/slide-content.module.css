@@ -1,6 +1,6 @@
 .heading {
   margin-top: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 0 !important;
   font-size: 28px;
   font-weight: 600;
   color: #020a1c;
@@ -109,13 +109,18 @@
 }
 
 .listWrapper {
-  margin: 20px 0;
+  margin: 0 0 20px 0;
 }
 
 .listWrapper ul,
 .listWrapper ol {
-  margin: 20px 0;
+  margin: 0 !important;
   padding-left: 32px;
+}
+
+/* Reduce gap between heading and list */
+.heading + .listWrapper {
+  margin-top: -8px;
 }
 
 .listWrapper ul {
@@ -160,7 +165,7 @@
 .diagramWrapper {
   margin: 24px 0;
   background: #2d2d2d;
-  border: 2px solid #52c41a;
+  border: none;
   border-radius: 4px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
