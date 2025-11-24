@@ -77,4 +77,41 @@
    *   background: custom-color;
    * }
    */
+
+  /* Отключаем ховер эффекты для таблиц в презентации */
+  .tableWrapper .ant-table-tbody > tr:hover > td {
+    background: inherit !important;
+  }
+
+  .tableWrapper .ant-table-tbody > tr:hover {
+    background: inherit !important;
+  }
+
+  /* Убираем верхний бордер у Ant Design таблиц */
+  .tableWrapper .ant-table {
+    border-top: none !important;
+  }
+
+  .tableWrapper .ant-table-container {
+    border-top: none !important;
+  }
+
+  .tableWrapper .ant-table-content {
+    border-top: none !important;
+  }
+
+  .tableWrapper .ant-table-thead > tr > th:first-child {
+    border-top: none !important;
+  }
+
+  /* Уменьшаем межстрочный интервал в таблицах */
+  .tableWrapper .ant-table-thead > tr > th {
+    padding: 8px 12px !important;
+    line-height: 1.4 !important;
+  }
+
+  .tableWrapper .ant-table-tbody > tr > td {
+    padding: 8px 12px !important;
+    line-height: 1.4 !important;
+  }
 }

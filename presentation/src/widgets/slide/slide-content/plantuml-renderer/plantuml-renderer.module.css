@@ -5,10 +5,12 @@
   align-items: center;
   justify-content: center;
   min-height: 200px;
-  background: #f9f9f9;
-  border: 1px solid #e0e0e0;
+  /*background: #2d2d2d;*/
+  border: 2px solid #52c41a;
   border-radius: 4px;
-  padding: 24px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
 }
 
 .diagram {
@@ -16,6 +18,8 @@
   height: auto;
   display: block;
   margin: 0 auto;
+  border-radius: 2px;
+  filter: brightness(1.1) contrast(1.05);
 }
 
 .fallback {

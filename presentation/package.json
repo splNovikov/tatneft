@@ -15,12 +15,14 @@
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
     "@types/pako": "^2.0.4",
+    "@types/react-transition-group": "^4.4.12",
     "antd": "^6.0.0",
     "pako": "^2.1.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-error-boundary": "^6.0.0",
-    "react-router-dom": "^7.9.3"
+    "react-router-dom": "^7.9.3",
+    "react-transition-group": "^4.4.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
