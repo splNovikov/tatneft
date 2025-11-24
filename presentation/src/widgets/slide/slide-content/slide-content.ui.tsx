@@ -1,6 +1,7 @@
 import { Typography } from 'antd';
 import type { SlideContent } from '~shared/lib/presentation.types';
 import { renderMarkdownText, parseMarkdownTable, parseMarkdownList } from './slide-content.lib';
+import { PlantUMLRenderer } from './plantuml-renderer';
 import styles from './slide-content.module.css';
 
 const { Title, Paragraph } = Typography;
@@ -44,7 +45,21 @@ export function SlideContentRenderer({ content }: SlideContentProps) {
         </div>
       );
 
+    case 'diagram-ref':
+      // Load PlantUML from external .puml file
+      return <PlantUMLRenderer plantumlPath={content.diagramPath || ''} />;
+
     case 'diagram':
+      // Check if it's PlantUML code
+      const isPlantUML = content.content.includes('@startuml') || 
+                        content.content.includes('@enduml') ||
+                        content.content.trim().toLowerCase().includes('plantuml');
+      
+      if (isPlantUML) {
+        return <PlantUMLRenderer plantumlCode={content.content} />;
+      }
+      
+      // Fallback for other diagram types
       return (
         <div className={styles.diagramWrapper}>
           <pre className={styles.diagram}>

@@ -1,0 +1,85 @@
+@startuml Slide8_Resilience
+!theme plain
+skinparam componentStyle rectangle
+
+package "Load Balancer" {
+  component [Load Balancer] as LB
+}
+
+package "Application Servers" {
+  component [API Server 1] as API1
+  component [API Server 2] as API2
+  component [API Server N] as APIN
+  component [Analysis Worker 1] as W1
+  component [Analysis Worker 2] as W2
+  component [Analysis Worker N] as WN
+}
+
+package "Message Queue" {
+  queue [Task Queue] as Queue
+  database [Redis Cache] as Cache
+}
+
+package "Databases" {
+  database [PostgreSQL\nMaster] as DB1
+  database [PostgreSQL\nReplica] as DB2
+  database [TimescaleDB\nCluster] as TSDB
+}
+
+package "External Systems" {
+  component [АСДКУ] as ASDKU
+  component [ИС МЕГА] as MEGA
+  component [ЕССД] as ESSD
+}
+
+LB --> API1
+LB --> API2
+LB --> APIN
+
+API1 --> Queue
+API2 --> Queue
+APIN --> Queue
+
+Queue --> W1
+Queue --> W2
+Queue --> WN
+
+W1 --> Cache
+W2 --> Cache
+WN --> Cache
+
+W1 --> DB1
+W2 --> DB1
+WN --> DB1
+
+DB1 --> DB2 : replication
+
+W1 --> TSDB
+W2 --> TSDB
+WN --> TSDB
+
+W1 --> ASDKU
+W1 --> MEGA
+W1 --> ESSD
+
+note right of LB
+  Горизонтальное
+  масштабирование
+end note
+
+note right of DB1
+  Репликация
+  для отказоустойчивости
+end note
+
+note right of Queue
+  Асинхронная
+  обработка задач
+end note
+
+note right of Cache
+  Кэширование
+  для производительности
+end note
+
+@enduml

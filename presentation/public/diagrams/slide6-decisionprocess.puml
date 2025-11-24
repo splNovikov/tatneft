@@ -1,0 +1,31 @@
+@startuml Slide6_DecisionProcess
+!theme plain
+skinparam sequenceMessageAlign center
+
+participant "Мастер\nЦДНГ" as Master
+participant "Руководство\nЦДНГ" as Manager
+participant "Система" as System
+participant "ООО «ПЦ»" as PC
+
+Master -> System: Просмотр результатов\nанализа
+System --> Master: Графики, статистика,\nрекомендации
+
+Master -> Manager: Информирование\nо рекомендации
+
+Manager -> System: Просмотр деталей\nрекомендации
+System --> Manager: Обоснование, расчеты
+
+Manager -> System: Принятие решения\n✅ Принять
+System -> System: Статус: accepted
+
+Manager -> PC: Заявка на изменение\nуставок в АСУТП
+activate PC
+
+PC -> PC: Изменение уставок:\n0.40 → 0.46 МПа
+
+PC --> System: Подтверждение\nвыполнения
+System -> System: Обновление уставок\nв БД
+
+deactivate PC
+
+@enduml

@@ -1,0 +1,15 @@
+@startuml Slide12_CostBreakdown
+!theme plain
+skinparam pie {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+}
+
+title Распределение стоимости проекта
+
+pie title "Стоимость проекта (средняя оценка)"
+    "Фаза 1: Разработка" : 51.4
+    "Фаза 1: Пилот и внедрение" : 11.1
+    "Фаза 2: Разработка ML" : 30.6
+    "Фаза 2: Пилот и внедрение" : 6.9
+@enduml

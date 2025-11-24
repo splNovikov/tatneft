@@ -1,0 +1,42 @@
+@startuml Slide11_CI_CD
+!theme plain
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+}
+
+title Процесс CI/CD
+
+start
+
+:Разработчик\nпушит код;
+
+:GitLab CI/CD\nзапускается;
+
+partition "Тестирование" {
+  :Модульные тесты;
+  :Интеграционные тесты;
+  :Линтинг и форматирование;
+  :Проверка безопасности;
+}
+
+if (Все тесты прошли?) then (да)
+  :Сборка Docker образов;
+  :Развертывание в staging;
+  :E2E тесты;
+  
+  if (E2E тесты прошли?) then (да)
+    :Развертывание в production;
+    :Мониторинг;
+  else (нет)
+    :Уведомление команды;
+    stop
+  endif
+else (нет)
+  :Уведомление разработчика;
+  stop
+endif
+
+stop
+
+@enduml

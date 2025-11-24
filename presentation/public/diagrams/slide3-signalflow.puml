@@ -1,0 +1,33 @@
+@startuml Slide3_SignalFlow
+!theme plain
+skinparam sequenceMessageAlign center
+
+actor "Диспетчер\nЕДС" as Dispatcher
+participant "ЕССД/\nАСДКУ" as ESSD
+participant "Система\nанализа" as System
+database "Внешние\nсистемы" as External
+
+ESSD -> System: Аварийный сигнал\n"Высокое давление: 0.42 МПа"
+activate System
+
+System -> System: Регистрация сигнала
+System -> Dispatcher: Уведомление
+
+Dispatcher -> System: Запуск анализа\nгруппы объектов
+activate System
+
+System -> External: Сбор данных\n(параллельно)
+activate External
+External --> System: Исторические данные
+External --> System: Уставки
+External --> System: Метаданные
+deactivate External
+
+System -> System: Анализ трендов\n(параллельно для группы)
+System -> System: Проверка уставок
+System -> System: Проверка состояния
+
+System --> Dispatcher: Результаты анализа
+deactivate System
+
+@enduml

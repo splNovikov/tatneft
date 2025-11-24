@@ -1,0 +1,24 @@
+@startuml Slide5_Notifications
+!theme plain
+skinparam sequenceMessageAlign center
+
+participant "Система" as System
+participant "Мастер\nЦДНГ" as Master
+participant "Руководство\nЦДНГ" as Manager
+
+System -> System: Рекомендация сформирована\n"Увеличить уставку до 0.46 МПа"
+
+System -> Master: Email: Результаты анализа\nпо объекту ДНС-123
+activate Master
+
+System -> Manager: Email: Рекомендация\nвысокого приоритета
+activate Manager
+
+Master -> Master: Просмотр деталей\nв веб-интерфейсе
+
+Manager -> Manager: Просмотр деталей\nрекомендации
+
+deactivate Master
+deactivate Manager
+
+@enduml

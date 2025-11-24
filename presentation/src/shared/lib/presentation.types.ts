@@ -2,10 +2,12 @@
  * Slide content types
  */
 export interface SlideContent {
-  type: 'text' | 'code' | 'table' | 'list' | 'diagram' | 'heading';
+  type: 'text' | 'code' | 'table' | 'list' | 'diagram' | 'diagram-ref' | 'heading';
   content: string;
   language?: string; // For code blocks
   metadata?: Record<string, unknown>;
+  // For diagram-ref: path to .puml file
+  diagramPath?: string;
 }
 
 /**

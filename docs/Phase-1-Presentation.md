@@ -40,30 +40,7 @@
 ### Диаграмма: Текущий процесс
 
 ```plantuml
-@startuml Slide1_CurrentProcess
-!theme plain
-skinparam activity {
-    BackgroundColor #FFE6E6
-    BorderColor #CC0000
-}
-
-title Текущий ручной процесс анализа
-
-start
-
-:Поступление аварийного сигнала;
-:Диспетчер получает сигнал;
-:Ручной анализ трендов\n(открытие ИС «МЕГА», «Проток»);
-:Ручная проверка уставок\n(поиск в СЭД);
-:Ручное сопоставление данных;
-:Формирование рекомендации вручную;
-:Отправка рекомендации;
-:Принятие решения;
-:Применение изменений;
-
-stop
-
-@enduml
+@plantuml:slide1-currentprocess.puml
 ```
 
 ---
@@ -121,36 +98,7 @@ stop
 ### Диаграмма: Фазовый подход
 
 ```plantuml
-@startuml Slide2_PhasedApproach
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
-
-title Фазовый подход к реализации
-
-start
-
-partition "ФАЗА 1: Алгоритмическая система" {
-  :Детерминированные алгоритмы;
-  :Анализ трендов и уставок;
-  :Генерация рекомендаций;
-  :Сбор статистических данных;
-  :Веб-интерфейсы для пользователей;
-}
-
-:Накопление данных;
-
-partition "ФАЗА 2: Система с ИИ" {
-  :Машинное обучение\nна собранных данных;
-  :Прогнозирование отказов;
-  :Самообучающиеся алгоритмы;
-}
-
-stop
-
-@enduml
+@plantuml:slide2-phasedapproach.puml
 ```
 
 ---
@@ -203,39 +151,7 @@ stop
 ### Диаграмма: Процесс поступления сигнала и анализа
 
 ```plantuml
-@startuml Slide3_SignalFlow
-!theme plain
-skinparam sequenceMessageAlign center
-
-actor "Диспетчер\nЕДС" as Dispatcher
-participant "ЕССД/\nАСДКУ" as ESSD
-participant "Система\nанализа" as System
-database "Внешние\nсистемы" as External
-
-ESSD -> System: Аварийный сигнал\n"Высокое давление: 0.42 МПа"
-activate System
-
-System -> System: Регистрация сигнала
-System -> Dispatcher: Уведомление
-
-Dispatcher -> System: Запуск анализа\nгруппы объектов
-activate System
-
-System -> External: Сбор данных\n(параллельно)
-activate External
-External --> System: Исторические данные
-External --> System: Уставки
-External --> System: Метаданные
-deactivate External
-
-System -> System: Анализ трендов\n(параллельно для группы)
-System -> System: Проверка уставок
-System -> System: Проверка состояния
-
-System --> Dispatcher: Результаты анализа
-deactivate System
-
-@enduml
+@plantuml:slide3-signalflow.puml
 ```
 
 ---
@@ -298,51 +214,7 @@ deactivate System
 ### Диаграмма: Алгоритм вычисления рекомендации
 
 ```plantuml
-@startuml Slide4_RecommendationAlgorithm
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
-
-title Алгоритм вычисления рекомендации
-
-start
-
-partition "Шаг 1: Анализ трендов" {
-  :Загрузка данных за 2 месяца;
-  :Расчет статистики:\nсреднее, мин, макс;
-  :Сравнение периодов;
-  note right: Фактический максимум:\n0.42 МПа
-}
-
-partition "Шаг 2: Проверка уставок" {
-  :Получение текущей уставки;
-  note right: Текущая уставка:\n0.40 МПа
-  :Сравнение с фактическим;
-  if (Уставка < Фактический?) then (да)
-    :Несоответствие выявлено;
-  else (нет)
-    stop
-  endif
-}
-
-partition "Шаг 3: Расчет" {
-  :Формула:\n0.42 × 1.10 = 0.46 МПа;
-  :Учет запаса безопасности (10%);
-  :Учет прогноза роста;
-  :Проверка нормативов;
-}
-
-partition "Шаг 4: Определение" {
-  :Приоритет: Высокий;
-  :Адресат: Руководство ЦДНГ;
-  :Формирование рекомендации;
-}
-
-stop
-
-@enduml
+@plantuml:slide4-recommendationalgorithm.puml
 ```
 
 ---
@@ -371,30 +243,7 @@ stop
 ### Диаграмма: Уведомления пользователям
 
 ```plantuml
-@startuml Slide5_Notifications
-!theme plain
-skinparam sequenceMessageAlign center
-
-participant "Система" as System
-participant "Мастер\nЦДНГ" as Master
-participant "Руководство\nЦДНГ" as Manager
-
-System -> System: Рекомендация сформирована\n"Увеличить уставку до 0.46 МПа"
-
-System -> Master: Email: Результаты анализа\nпо объекту ДНС-123
-activate Master
-
-System -> Manager: Email: Рекомендация\nвысокого приоритета
-activate Manager
-
-Master -> Master: Просмотр деталей\nв веб-интерфейсе
-
-Manager -> Manager: Просмотр деталей\nрекомендации
-
-deactivate Master
-deactivate Manager
-
-@enduml
+@plantuml:slide5-notifications.puml
 ```
 
 ---
@@ -430,37 +279,7 @@ deactivate Manager
 ### Диаграмма: Процесс принятия решения и применения
 
 ```plantuml
-@startuml Slide6_DecisionProcess
-!theme plain
-skinparam sequenceMessageAlign center
-
-participant "Мастер\nЦДНГ" as Master
-participant "Руководство\nЦДНГ" as Manager
-participant "Система" as System
-participant "ООО «ПЦ»" as PC
-
-Master -> System: Просмотр результатов\nанализа
-System --> Master: Графики, статистика,\nрекомендации
-
-Master -> Manager: Информирование\nо рекомендации
-
-Manager -> System: Просмотр деталей\nрекомендации
-System --> Manager: Обоснование, расчеты
-
-Manager -> System: Принятие решения\n✅ Принять
-System -> System: Статус: accepted
-
-Manager -> PC: Заявка на изменение\nуставок в АСУТП
-activate PC
-
-PC -> PC: Изменение уставок:\n0.40 → 0.46 МПа
-
-PC --> System: Подтверждение\nвыполнения
-System -> System: Обновление уставок\nв БД
-
-deactivate PC
-
-@enduml
+@plantuml:slide6-decisionprocess.puml
 ```
 
 ---
@@ -499,37 +318,7 @@ deactivate PC
 ### Диаграмма: Результаты и эффективность
 
 ```plantuml
-@startuml Slide7_Results
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
-
-title Мониторинг эффективности
-
-start
-
-:Применение рекомендации\n(уставка: 0.40 → 0.46 МПа);
-
-:Период мониторинга:\n1-2 недели;
-
-partition "Метрики" {
-  :Сработок в неделю:\n265 → 15 (↓ 94%);
-  :Ложные тревоги:\n250 → 0 (↓ 100%);
-}
-
-partition "Время обработки" {
-  :Ручной анализ:\nнесколько часов;
-  :Автоматический:\n5-10 минут;
-  :Ускорение: 10-20 раз;
-}
-
-:Эффективность\nподтверждена ✅;
-
-stop
-
-@enduml
+@plantuml:slide7-results.puml
 ```
 
 ---
@@ -584,91 +373,7 @@ stop
 ### Диаграмма: Архитектура отказоустойчивости
 
 ```plantuml
-@startuml Slide8_Resilience
-!theme plain
-skinparam componentStyle rectangle
-
-package "Load Balancer" {
-  component [Load Balancer] as LB
-}
-
-package "Application Servers" {
-  component [API Server 1] as API1
-  component [API Server 2] as API2
-  component [API Server N] as APIN
-  component [Analysis Worker 1] as W1
-  component [Analysis Worker 2] as W2
-  component [Analysis Worker N] as WN
-}
-
-package "Message Queue" {
-  queue [Task Queue] as Queue
-  database [Redis Cache] as Cache
-}
-
-package "Databases" {
-  database [PostgreSQL\nMaster] as DB1
-  database [PostgreSQL\nReplica] as DB2
-  database [TimescaleDB\nCluster] as TSDB
-}
-
-package "External Systems" {
-  component [АСДКУ] as ASDKU
-  component [ИС МЕГА] as MEGA
-  component [ЕССД] as ESSD
-}
-
-LB --> API1
-LB --> API2
-LB --> APIN
-
-API1 --> Queue
-API2 --> Queue
-APIN --> Queue
-
-Queue --> W1
-Queue --> W2
-Queue --> WN
-
-W1 --> Cache
-W2 --> Cache
-WN --> Cache
-
-W1 --> DB1
-W2 --> DB1
-WN --> DB1
-
-DB1 --> DB2 : replication
-
-W1 --> TSDB
-W2 --> TSDB
-WN --> TSDB
-
-W1 --> ASDKU
-W1 --> MEGA
-W1 --> ESSD
-
-note right of LB
-  Горизонтальное
-  масштабирование
-end note
-
-note right of DB1
-  Репликация
-  для отказоустойчивости
-end note
-
-note right of Queue
-  Асинхронная
-  обработка задач
-end note
-
-note right of Cache
-  Кэширование
-  для производительности
-end note
-
-@enduml
+@plantuml:slide8-resilience.puml
 ```
 
 ---
@@ -751,60 +456,7 @@ end note
 ### Диаграмма: Этапы разработки Фазы 1
 
 ```plantuml
-@startuml Slide9_Phase1_Timeline
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
-
-title Фаза 1: Этапы разработки (9-12 месяцев)
-
-start
-
-partition "Анализ и проектирование\n(3-5 недель)" {
-  :Анализ требований;
-  :Техническое проектирование;
-  :Проектирование БД и API;
-  :Дизайн интерфейсов;
-}
-
-partition "Разработка инфраструктуры\n(5-6 недель)" {
-  :Настройка БД и инфраструктуры;
-  :Разработка слоя интеграции;
-  :Базовое API;
-}
-
-partition "Разработка алгоритмов\n(6-8 недель)" {
-  :Trend Analyzer;
-  :Threshold Validator;
-  :Recommendation Generator;
-  :Модульные тесты;
-}
-
-partition "Разработка интерфейсов\n(6-8 недель)" {
-  :Веб-интерфейс;
-  :Дашборды;
-  :Страницы анализа;
-  :Компонентные тесты;
-}
-
-partition "Интеграция и тестирование\n(5-6 недель)" {
-  :Интеграционное тестирование;
-  :E2E тестирование;
-  :Приемочное тестирование;
-  :Нагрузочное тестирование;
-}
-
-partition "Пилот и развертывание\n(15-21 неделя)" {
-  :Пилот на 5-10 объектах;
-  :Доработка;
-  :Масштабирование;
-}
-
-stop
-
-@enduml
+@plantuml:slide9-phase1-timeline.puml
 ```
 
 ---
@@ -891,59 +543,7 @@ stop
 ### Диаграмма: Этапы разработки Фазы 2
 
 ```plantuml
-@startuml Slide10_Phase2_Timeline
-!theme plain
-skinparam activity {
-    BackgroundColor #FFF4E6
-    BorderColor #FFA500
-}
-
-title Фаза 2: Этапы разработки (6-9 месяцев)
-
-start
-
-partition "Анализ и подготовка\n(5-6 недель)" {
-  :Анализ накопленных данных;
-  :Подготовка датасетов;
-  :Feature engineering;
-  :Валидация данных;
-}
-
-partition "Проектирование ML\n(3-5 недель)" {
-  :Выбор алгоритмов;
-  :Проектирование архитектуры;
-  :Определение метрик;
-}
-
-partition "ML инфраструктура\n(5-6 недель)" {
-  :ML Pipeline;
-  :Версионирование моделей;
-  :MLflow/Kubeflow;
-}
-
-partition "Разработка моделей\n(9-12 недель)" {
-  :Обучение моделей;
-  :Валидация;
-  :Оптимизация гиперпараметров;
-  :A/B тестирование;
-}
-
-partition "Интеграция\n(5-6 недель)" {
-  :Интеграция в систему;
-  :API для моделей;
-  :Мониторинг моделей;
-}
-
-partition "Тестирование и пилот\n(11-14 недель)" {
-  :Тестирование моделей;
-  :Пилотное внедрение;
-  :Доработка;
-  :Развертывание;
-}
-
-stop
-
-@enduml
+@plantuml:slide10-phase2-timeline.puml
 ```
 
 ---
@@ -983,48 +583,7 @@ stop
 ### Процесс CI/CD
 
 ```plantuml
-@startuml Slide11_CI_CD
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
-
-title Процесс CI/CD
-
-start
-
-:Разработчик\nпушит код;
-
-:GitLab CI/CD\nзапускается;
-
-partition "Тестирование" {
-  :Модульные тесты;
-  :Интеграционные тесты;
-  :Линтинг и форматирование;
-  :Проверка безопасности;
-}
-
-if (Все тесты прошли?) then (да)
-  :Сборка Docker образов;
-  :Развертывание в staging;
-  :E2E тесты;
-  
-  if (E2E тесты прошли?) then (да)
-    :Развертывание в production;
-    :Мониторинг;
-  else (нет)
-    :Уведомление команды;
-    stop
-  endif
-else (нет)
-  :Уведомление разработчика;
-  stop
-endif
-
-stop
-
-@enduml
+@plantuml:slide11-ci-cd.puml
 ```
 
 ### Метрики качества
@@ -1135,21 +694,7 @@ stop
 ### Диаграмма: Распределение стоимости по фазам
 
 ```plantuml
-@startuml Slide12_CostBreakdown
-!theme plain
-skinparam pie {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
-
-title Распределение стоимости проекта
-
-pie title "Стоимость проекта (средняя оценка)"
-    "Фаза 1: Разработка" : 51.4
-    "Фаза 1: Пилот и внедрение" : 11.1
-    "Фаза 2: Разработка ML" : 30.6
-    "Фаза 2: Пилот и внедрение" : 6.9
-@enduml
+@plantuml:slide12-costbreakdown.puml
 ```
 
 ---

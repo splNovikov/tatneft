@@ -133,11 +133,37 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       if (inCodeBlock) {
         // End of code block
         const code = currentCodeBlock.join('\n');
-        content.push({
-          type: 'code',
-          content: code,
-          language: codeLanguage || undefined,
-        });
+        // Check if it's a PlantUML diagram
+        const isPlantUML = codeLanguage.toLowerCase() === 'plantuml' || 
+                          code.includes('@startuml') || 
+                          code.includes('@enduml');
+        
+        if (isPlantUML) {
+          // Check if it's a reference to a .puml file
+          // Format: ```plantuml
+          // @plantuml:path/to/file.puml
+          // ```
+          const refMatch = code.match(/^@plantuml:(.+)$/m);
+          if (refMatch) {
+            content.push({
+              type: 'diagram-ref',
+              content: code,
+              diagramPath: refMatch[1].trim(),
+            });
+          } else {
+            // Inline PlantUML code
+            content.push({
+              type: 'diagram',
+              content: code,
+            });
+          }
+        } else {
+          content.push({
+            type: 'code',
+            content: code,
+            language: codeLanguage || undefined,
+          });
+        }
         currentCodeBlock = [];
         inCodeBlock = false;
         codeLanguage = '';
