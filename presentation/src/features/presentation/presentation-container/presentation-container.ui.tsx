@@ -1,4 +1,4 @@
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorHandler, { logError } from '~shared/ui/error-handler';
 import Spinner from '~shared/ui/spinner';
@@ -15,6 +15,7 @@ interface PresentationContainerProps {
  * Main presentation container with navigation
  */
 export function PresentationContainer({ presentation }: PresentationContainerProps) {
+  const [isNavigationVisible, setIsNavigationVisible] = useState(true);
   const navigation = usePresentationNavigation({
     totalSlides: presentation.slides.length,
     initialSlide: 1,
@@ -40,7 +41,23 @@ export function PresentationContainer({ presentation }: PresentationContainerPro
           </Suspense>
         </div>
         
-        <PresentationNavigation navigation={navigation} totalSlides={presentation.slides.length} />
+        {isNavigationVisible ? (
+          <PresentationNavigation 
+            navigation={navigation} 
+            totalSlides={presentation.slides.length}
+            onClose={() => setIsNavigationVisible(false)}
+          />
+        ) : (
+          <div className={styles.navigationToggle}>
+            <button 
+              className={styles.showNavigationButton}
+              onClick={() => setIsNavigationVisible(true)}
+              title="Показать навигацию"
+            >
+              ⌄
+            </button>
+          </div>
+        )}
       </div>
     </ErrorBoundary>
   );

@@ -1,11 +1,12 @@
 import { Button, Progress } from 'antd';
-import { LeftOutlined, RightOutlined, HomeOutlined, ToTopOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined, HomeOutlined, ToTopOutlined, CloseOutlined } from '@ant-design/icons';
 import type { UsePresentationNavigationReturn } from './presentation-navigation.types';
 import styles from './presentation-navigation.module.css';
 
 interface PresentationNavigationProps {
   navigation: UsePresentationNavigationReturn;
   totalSlides: number;
+  onClose?: () => void;
 }
 
 /**
@@ -14,11 +15,21 @@ interface PresentationNavigationProps {
 export function PresentationNavigation({
   navigation,
   totalSlides,
+  onClose,
 }: PresentationNavigationProps) {
   const progress = (navigation.currentSlide / totalSlides) * 100;
 
   return (
     <div className={styles.navigation}>
+      {onClose && (
+        <button 
+          className={styles.closeButton}
+          onClick={onClose}
+          title="Скрыть навигацию"
+        >
+          <CloseOutlined />
+        </button>
+      )}
       <div className={styles.controls}>
         <Button
           icon={<HomeOutlined />}

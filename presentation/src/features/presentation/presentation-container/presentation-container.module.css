@@ -34,3 +34,30 @@
   color: #ff4d4f;
 }
 
+.navigationToggle {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.showNavigationButton {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 8px 24px;
+  font-size: 24px;
+  color: #8c8c8c;
+  cursor: pointer;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.showNavigationButton:hover {
+  background: #f5f5f5;
+  color: #020a1c;
+  padding-top: 12px;
+}
+
