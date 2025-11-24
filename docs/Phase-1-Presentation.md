@@ -37,6 +37,35 @@
 
 Автоматизировать анализ и снизить количество ложных тревог
 
+### Диаграмма: Текущий процесс
+
+```plantuml
+@startuml Slide1_CurrentProcess
+!theme plain
+skinparam activity {
+    BackgroundColor #FFE6E6
+    BorderColor #CC0000
+}
+
+title Текущий ручной процесс анализа
+
+start
+
+:Поступление аварийного сигнала;
+:Диспетчер получает сигнал;
+:Ручной анализ трендов\n(открытие ИС «МЕГА», «Проток»);
+:Ручная проверка уставок\n(поиск в СЭД);
+:Ручное сопоставление данных;
+:Формирование рекомендации вручную;
+:Отправка рекомендации;
+:Принятие решения;
+:Применение изменений;
+
+stop
+
+@enduml
+```
+
 ---
 
 ## Слайд 2: Фазовый подход к решению
@@ -89,6 +118,41 @@
 ✅ Снижение тревог уже на первой фазе  
 ✅ Готовые интерфейсы для пользователей
 
+### Диаграмма: Фазовый подход
+
+```plantuml
+@startuml Slide2_PhasedApproach
+!theme plain
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+}
+
+title Фазовый подход к реализации
+
+start
+
+partition "ФАЗА 1: Алгоритмическая система" {
+  :Детерминированные алгоритмы;
+  :Анализ трендов и уставок;
+  :Генерация рекомендаций;
+  :Сбор статистических данных;
+  :Веб-интерфейсы для пользователей;
+}
+
+:Накопление данных;
+
+partition "ФАЗА 2: Система с ИИ" {
+  :Машинное обучение\nна собранных данных;
+  :Прогнозирование отказов;
+  :Самообучающиеся алгоритмы;
+}
+
+stop
+
+@enduml
+```
+
 ---
 
 ## Слайд 3: Use Case - Поступление сигнала и анализ
@@ -135,6 +199,44 @@
    - Проверка состояния оборудования
 
 **Результат:** Проблемы выявлены автоматически для всех объектов группы
+
+### Диаграмма: Процесс поступления сигнала и анализа
+
+```plantuml
+@startuml Slide3_SignalFlow
+!theme plain
+skinparam sequenceMessageAlign center
+
+actor "Диспетчер\nЕДС" as Dispatcher
+participant "ЕССД/\nАСДКУ" as ESSD
+participant "Система\nанализа" as System
+database "Внешние\nсистемы" as External
+
+ESSD -> System: Аварийный сигнал\n"Высокое давление: 0.42 МПа"
+activate System
+
+System -> System: Регистрация сигнала
+System -> Dispatcher: Уведомление
+
+Dispatcher -> System: Запуск анализа\nгруппы объектов
+activate System
+
+System -> External: Сбор данных\n(параллельно)
+activate External
+External --> System: Исторические данные
+External --> System: Уставки
+External --> System: Метаданные
+deactivate External
+
+System -> System: Анализ трендов\n(параллельно для группы)
+System -> System: Проверка уставок
+System -> System: Проверка состояния
+
+System --> Dispatcher: Результаты анализа
+deactivate System
+
+@enduml
+```
 
 ---
 
@@ -193,6 +295,56 @@
 - Требуется решение по изменению уставок
 - Необходимо согласование с ООО «ПЦ»
 
+### Диаграмма: Алгоритм вычисления рекомендации
+
+```plantuml
+@startuml Slide4_RecommendationAlgorithm
+!theme plain
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+}
+
+title Алгоритм вычисления рекомендации
+
+start
+
+partition "Шаг 1: Анализ трендов" {
+  :Загрузка данных за 2 месяца;
+  :Расчет статистики:\nсреднее, мин, макс;
+  :Сравнение периодов;
+  note right: Фактический максимум:\n0.42 МПа
+}
+
+partition "Шаг 2: Проверка уставок" {
+  :Получение текущей уставки;
+  note right: Текущая уставка:\n0.40 МПа
+  :Сравнение с фактическим;
+  if (Уставка < Фактический?) then (да)
+    :Несоответствие выявлено;
+  else (нет)
+    stop
+  endif
+}
+
+partition "Шаг 3: Расчет" {
+  :Формула:\n0.42 × 1.10 = 0.46 МПа;
+  :Учет запаса безопасности (10%);
+  :Учет прогноза роста;
+  :Проверка нормативов;
+}
+
+partition "Шаг 4: Определение" {
+  :Приоритет: Высокий;
+  :Адресат: Руководство ЦДНГ;
+  :Формирование рекомендации;
+}
+
+stop
+
+@enduml
+```
+
 ---
 
 ## Слайд 5: Use Case - Результаты и рекомендации
@@ -215,6 +367,35 @@
 
 **Роль: Руководство ЦДНГ**
 - Получает email о рекомендации высокого приоритета
+
+### Диаграмма: Уведомления пользователям
+
+```plantuml
+@startuml Slide5_Notifications
+!theme plain
+skinparam sequenceMessageAlign center
+
+participant "Система" as System
+participant "Мастер\nЦДНГ" as Master
+participant "Руководство\nЦДНГ" as Manager
+
+System -> System: Рекомендация сформирована\n"Увеличить уставку до 0.46 МПа"
+
+System -> Master: Email: Результаты анализа\nпо объекту ДНС-123
+activate Master
+
+System -> Manager: Email: Рекомендация\nвысокого приоритета
+activate Manager
+
+Master -> Master: Просмотр деталей\nв веб-интерфейсе
+
+Manager -> Manager: Просмотр деталей\nрекомендации
+
+deactivate Master
+deactivate Manager
+
+@enduml
+```
 
 ---
 
@@ -245,6 +426,42 @@
 **Роль: Система**
 - Обновляет уставки в базе данных
 - Отслеживает статус рекомендации
+
+### Диаграмма: Процесс принятия решения и применения
+
+```plantuml
+@startuml Slide6_DecisionProcess
+!theme plain
+skinparam sequenceMessageAlign center
+
+participant "Мастер\nЦДНГ" as Master
+participant "Руководство\nЦДНГ" as Manager
+participant "Система" as System
+participant "ООО «ПЦ»" as PC
+
+Master -> System: Просмотр результатов\nанализа
+System --> Master: Графики, статистика,\nрекомендации
+
+Master -> Manager: Информирование\nо рекомендации
+
+Manager -> System: Просмотр деталей\nрекомендации
+System --> Manager: Обоснование, расчеты
+
+Manager -> System: Принятие решения\n✅ Принять
+System -> System: Статус: accepted
+
+Manager -> PC: Заявка на изменение\nуставок в АСУТП
+activate PC
+
+PC -> PC: Изменение уставок:\n0.40 → 0.46 МПа
+
+PC --> System: Подтверждение\nвыполнения
+System -> System: Обновление уставок\nв БД
+
+deactivate PC
+
+@enduml
+```
 
 ---
 
@@ -278,6 +495,42 @@
 3. **Мастер ЦДНГ** - изучил результаты
 4. **Руководство ЦДНГ** - принял решение
 5. **ООО «ПЦ»** - применил изменения
+
+### Диаграмма: Результаты и эффективность
+
+```plantuml
+@startuml Slide7_Results
+!theme plain
+skinparam activity {
+    BackgroundColor #E8F4F8
+    BorderColor #2E5C8A
+}
+
+title Мониторинг эффективности
+
+start
+
+:Применение рекомендации\n(уставка: 0.40 → 0.46 МПа);
+
+:Период мониторинга:\n1-2 недели;
+
+partition "Метрики" {
+  :Сработок в неделю:\n265 → 15 (↓ 94%);
+  :Ложные тревоги:\n250 → 0 (↓ 100%);
+}
+
+partition "Время обработки" {
+  :Ручной анализ:\nнесколько часов;
+  :Автоматический:\n5-10 минут;
+  :Ускорение: 10-20 раз;
+}
+
+:Эффективность\nподтверждена ✅;
+
+stop
+
+@enduml
+```
 
 ---
 
