@@ -134,7 +134,7 @@
 }
 
 .listWrapper li::marker {
-  color: #52c41a;
+  color: #006400;
   font-weight: 600;
 }
 
@@ -149,6 +149,11 @@
   font-size: 16px;
   color: #434343;
   padding-left: 8px;
+}
+
+.markdown-list li::marker {
+  color: #006400;
+  font-weight: 600;
 }
 
 .diagramWrapper {
