@@ -1,0 +1,12 @@
+@startuml Slide4_RecommendationAlgorithm_Part3
+!include gost-theme.puml
+
+partition "Шаг 3" {
+  :Формула:\n0.42 × 1.10 = 0.46 МПа;
+  :Учет запаса безопасности (10%);
+  :Учет прогноза роста;
+  :Проверка нормативов;
+}
+
+@enduml
+

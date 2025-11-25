@@ -1,0 +1,13 @@
+@startuml Slide4_RecommendationAlgorithm_Part4
+!include gost-theme.puml
+
+partition "Шаг 4" {
+  :Приоритет: Высокий;
+  :Адресат: Руководство ЦДНГ;
+  :Формирование рекомендации;
+}
+
+stop
+
+@enduml
+

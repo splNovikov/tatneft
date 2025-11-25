@@ -1,6 +1,8 @@
 @startuml Slide6_DecisionProcess
 !include gost-theme.puml
 
+scale 0.8
+
 participant "Мастер\nЦДНГ" as Master
 participant "Руководство\nЦДНГ" as Manager
 participant "Система" as System

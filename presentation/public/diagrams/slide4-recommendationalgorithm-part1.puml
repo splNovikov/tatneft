@@ -1,0 +1,14 @@
+@startuml Slide4_RecommendationAlgorithm_Part1
+!include gost-theme.puml
+
+start
+
+partition "Шаг 1" {
+  :Загрузка данных за 2 месяца;
+  :Расчет статистики:\nсреднее, мин, макс;
+  :Сравнение периодов;
+  note right: Фактический максимум:\n0.42 МПа
+}
+
+@enduml
+

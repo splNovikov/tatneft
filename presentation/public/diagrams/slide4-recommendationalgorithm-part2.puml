@@ -1,0 +1,16 @@
+@startuml Slide4_RecommendationAlgorithm_Part2
+!include gost-theme.puml
+
+partition "Шаг 2" {
+  :Получение текущей уставки;
+  note right: Текущая уставка:\n0.40 МПа
+  :Сравнение с фактическим;
+  if (Уставка < Фактический?) then (да)
+    :Несоответствие выявлено;
+  else (нет)
+    stop
+  endif
+}
+
+@enduml
+

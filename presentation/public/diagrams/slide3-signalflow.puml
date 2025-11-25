@@ -1,6 +1,8 @@
 @startuml Slide3_SignalFlow
 !include gost-theme.puml
 
+scale 0.8
+
 actor "Диспетчер\nЕДС" as Dispatcher
 participant "ЕССД/\nАСДКУ" as ESSD
 participant "Система\nанализа" as System

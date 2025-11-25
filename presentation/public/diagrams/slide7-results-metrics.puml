@@ -1,0 +1,10 @@
+@startuml Slide7_Results_Metrics
+!include gost-theme.puml
+
+partition "Метрики" {
+  :Сработок в неделю:\n265 → 15 (↓ 94%);
+  :Ложные тревоги:\n250 → 0 (↓ 100%);
+}
+
+@enduml
+

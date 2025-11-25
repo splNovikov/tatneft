@@ -250,10 +250,34 @@
 
 ---
 
-## Диаграмма: Алгоритм вычисления рекомендации
+## Диаграмма: Алгоритм вычисления рекомендации. Шаг 1: Анализ трендов
 
 ```plantuml
-@plantuml:slide4-recommendationalgorithm.puml
+@plantuml:slide4-recommendationalgorithm-part1.puml
+```
+
+---
+
+## Диаграмма: Алгоритм вычисления рекомендации. Шаг 2: Проверка уставок
+
+```plantuml
+@plantuml:slide4-recommendationalgorithm-part2.puml
+```
+
+---
+
+## Диаграмма: Алгоритм вычисления рекомендации. Шаг 3: Расчет
+
+```plantuml
+@plantuml:slide4-recommendationalgorithm-part3.puml
+```
+
+---
+
+## Диаграмма: Алгоритм вычисления рекомендации. Шаг 4: Определение
+
+```plantuml
+@plantuml:slide4-recommendationalgorithm-part4.puml
 ```
 
 ---
@@ -378,11 +402,24 @@
 
 ---
 
-
 ## Диаграмма: Результаты и эффективность
 
 ```plantuml
-@plantuml:slide7-results.puml
+@plantuml:slide7-results-main.puml
+```
+
+---
+## Диаграмма: Результаты и эффективность. Метрики
+
+```plantuml
+@plantuml:slide7-results-metrics.puml
+```
+
+---
+## Диаграмма: Результаты и эффективность. Время Обработки
+
+```plantuml
+@plantuml:slide7-results-time.puml
 ```
 
 ---
