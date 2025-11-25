@@ -115,3 +115,48 @@
     line-height: 1.4 !important;
   }
 }
+
+/* === PRINT STYLES === */
+@media print {
+  /* Hide navigation and UI elements */
+  [class*="navigation"],
+  [class*="navigationToggle"],
+  [class*="companyLogo"] {
+    display: none !important;
+  }
+
+  /* Optimize page layout */
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  /* Ensure slides take full page */
+  [class*="slide"],
+  [class*="titleSlide"] {
+    page-break-after: always;
+    page-break-inside: avoid;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Prevent content from breaking across pages */
+  [class*="slideContent"],
+  [class*="slideHeader"] {
+    page-break-inside: avoid;
+  }
+
+  /* Ensure images and diagrams fit */
+  img {
+    max-width: 100%;
+    height: auto;
+    page-break-inside: avoid;
+  }
+
+  /* Optimize text rendering */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
