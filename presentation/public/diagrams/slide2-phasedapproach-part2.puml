@@ -1,0 +1,13 @@
+@startuml Slide2_PhasedApproach_Part2
+!include gost-theme.puml
+
+partition "ФАЗА 2" {
+  :Машинное обучение\nна собранных данных;
+  :Прогнозирование отказов;
+  :Самообучающиеся алгоритмы;
+}
+
+stop
+
+@enduml
+

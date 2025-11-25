@@ -104,10 +104,18 @@
 
 ---
 
-## Диаграмма: Фазовый подход
+## Диаграмма: Фазовый подход. Алгоритмическая система
 
 ```plantuml
-@plantuml:slide2-phasedapproach.puml
+@plantuml:slide2-phasedapproach-part1.puml
+```
+
+---
+
+## Диаграмма: Фазовый подход. Система с ИИ
+
+```plantuml
+@plantuml:slide2-phasedapproach-part2.puml
 ```
 
 ---

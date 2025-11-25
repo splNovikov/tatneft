@@ -1,6 +1,8 @@
 @startuml Slide1_CurrentProcess
 !include gost-theme.puml
 
+scale 0.85
+
 start
 
 :Поступление аварийного сигнала;
