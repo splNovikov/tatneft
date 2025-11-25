@@ -1,8 +1,6 @@
 @startuml Slide1_CurrentProcess
 !include gost-theme.puml
 
-title Текущий ручной процесс анализа
-
 start
 
 :Поступление аварийного сигнала;

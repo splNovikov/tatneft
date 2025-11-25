@@ -25,11 +25,27 @@ Export to a specific location:
 npm run export:pdf ./output/my-presentation.pdf
 ```
 
-Or using tsx directly:
+### Export Limited Number of Slides
+
+Export only the first N slides:
 
 ```bash
-tsx scripts/export-pdf.ts ./output/my-presentation.pdf
+# IMPORTANT: Use -- to pass arguments to the script when using npm run
+npm run export:pdf -- --slides 5
+# or with custom output path
+npm run export:pdf -- ./output/first-5-slides.pdf --slides 5
+# or slides first, then path
+npm run export:pdf -- --slides 5 ./output/first-5-slides.pdf
 ```
+
+Or using tsx directly (no -- needed):
+
+```bash
+tsx scripts/export-pdf.ts --slides 10
+tsx scripts/export-pdf.ts ./output/my-presentation.pdf --slides 5
+```
+
+**Note**: When using `npm run`, you must use `--` before any flags to pass them to the script. Without `--`, npm will try to interpret the flags itself.
 
 ## How It Works
 
@@ -51,6 +67,7 @@ tsx scripts/export-pdf.ts ./output/my-presentation.pdf
 - ✅ Optimized page breaks for slides
 - ✅ High-quality rendering (2x DPI)
 - ✅ Landscape A4 format
+- ✅ Optional limit on number of slides to export
 - ✅ Automatic cleanup (stops dev server and closes browser)
 
 ## Troubleshooting
@@ -85,8 +102,10 @@ exportPresentationToPDF({
   devServerPort: 5173,               // Dev server port
   waitForDiagrams: true,             // Wait for PlantUML diagrams
   timeout: 30000,                    // Page load timeout
+  maxSlides: 10,                     // Maximum number of slides to export (optional, exports all if not specified)
 });
 ```
+
 
 ## Notes
 

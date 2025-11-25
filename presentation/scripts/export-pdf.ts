@@ -21,6 +21,7 @@ interface ExportOptions {
   devServerPort?: number;
   waitForDiagrams?: boolean;
   timeout?: number;
+  maxSlides?: number; // Maximum number of slides to export (if not specified, exports all)
 }
 
 /**
@@ -75,55 +76,23 @@ function startDevServer(port: number = 5173): Promise<ChildProcess> {
 /**
  * Waits for PlantUML diagrams to load on the current slide
  */
-async function waitForPlantUMLDiagrams(page: Page, timeout: number = 30000): Promise<void> {
+async function waitForPlantUMLDiagrams(page: Page, timeout: number = 10000): Promise<void> {
   try {
-    // Wait for all PlantUML diagrams to load
-    // This includes waiting for loading spinners to disappear and images to be ready
+    // Wait for all PlantUML images to load
     await page.waitForFunction(
       () => {
-        // Check if there are any loading indicators visible
-        const loadingTexts = Array.from(document.querySelectorAll('*')).filter(
-          (el) => el.textContent?.includes('Загрузка диаграммы')
-        );
-        if (loadingTexts.length > 0) {
-          return false; // Still loading
-        }
-
-        // Check for Spin components (Ant Design spinner)
-        const spinners = document.querySelectorAll('.ant-spin, [class*="spin"]');
-        const visibleSpinners = Array.from(spinners).filter((spinner) => {
-          const style = window.getComputedStyle(spinner);
-          return style.display !== 'none' && style.visibility !== 'hidden';
-        });
-        if (visibleSpinners.length > 0) {
-          return false; // Still loading
-        }
-
-        // Check for all PlantUML images
         const images = document.querySelectorAll('img[alt="PlantUML Diagram"]');
+        if (images.length === 0) return true; // No diagrams, we're done
         
-        // If there are no images and no loading indicators, we're done
-        if (images.length === 0) {
-          return true;
-        }
-        
-        // All images must be loaded
-        const allLoaded = Array.from(images).every((img) => {
+        return Array.from(images).every((img) => {
           const htmlImg = img as HTMLImageElement;
-          return htmlImg.complete && htmlImg.naturalWidth > 0 && htmlImg.naturalHeight > 0;
+          return htmlImg.complete && htmlImg.naturalWidth > 0;
         });
-
-        return allLoaded;
       },
-      { timeout, polling: 500 } // Check every 500ms
+      { timeout }
     );
-
-    // Additional wait to ensure images are fully rendered
-    await delay(1000);
   } catch (error) {
     console.warn('Timeout waiting for diagrams, continuing anyway...');
-    // Give it one more second before continuing
-    await delay(1000);
   }
 }
 
@@ -200,12 +169,12 @@ async function waitForPresentationLoad(page: Page): Promise<number> {
 async function navigateToSlide(page: Page, slideNumber: number, totalSlides: number): Promise<void> {
   // Go to first slide
   await page.keyboard.press('Home');
-  await delay(500);
+  await delay(300);
 
   // Navigate to target slide
   for (let i = 1; i < slideNumber; i++) {
     await page.keyboard.press('ArrowRight');
-    await delay(500); // Increased delay for React to render
+    await delay(300);
   }
 
   // Verify we're on the correct slide
@@ -221,12 +190,9 @@ async function navigateToSlide(page: Page, slideNumber: number, totalSlides: num
       }
       return false;
     },
-    { timeout: 10000 },
+    { timeout: 5000 },
     slideNumber
   );
-
-  // Wait for slide content to render
-  await delay(1000);
 }
 
 /**
@@ -239,6 +205,7 @@ export async function exportPresentationToPDF(options: ExportOptions = {}): Prom
     devServerPort = 5173,
     waitForDiagrams = true,
     timeout = 30000,
+    maxSlides,
   } = options;
 
   let devServer: ChildProcess | null = null;
@@ -306,65 +273,29 @@ export async function exportPresentationToPDF(options: ExportOptions = {}): Prom
       document.head.appendChild(style);
     });
 
-    // Generate PDF with all slides
-    console.log('Generating PDF...');
+    // Generate PDF with all slides (or up to maxSlides if specified)
+    const slidesToExport = maxSlides ? Math.min(maxSlides, totalSlides) : totalSlides;
+    if (maxSlides && maxSlides < totalSlides) {
+      console.log(`Generating PDF for ${slidesToExport} of ${totalSlides} slides...`);
+    } else {
+      console.log(`Generating PDF for all ${slidesToExport} slide(s)...`);
+    }
     
     const pdfPages: Buffer[] = [];
 
-    for (let slideNum = 1; slideNum <= totalSlides; slideNum++) {
-      console.log(`Processing slide ${slideNum}/${totalSlides}...`);
+    for (let slideNum = 1; slideNum <= slidesToExport; slideNum++) {
+      console.log(`Processing slide ${slideNum}/${slidesToExport}...`);
       
       // Navigate to slide
       await navigateToSlide(page, slideNum, totalSlides);
       
-      // Wait for React to render the slide content
-      await delay(1000);
-      
-      // Wait for any network requests to complete
-      // Puppeteer doesn't have waitForLoadState, so we wait a bit for async operations
-      await delay(2000);
-      
       // Wait for diagrams if needed
       if (waitForDiagrams) {
-        console.log(`  Waiting for diagrams on slide ${slideNum}...`);
-        await waitForPlantUMLDiagrams(page, 45000); // Increased timeout to 45 seconds
-        
-        // Verify diagrams are actually loaded (not showing loading state)
-        const diagramStatus = await page.evaluate(() => {
-          const loadingTexts = Array.from(document.querySelectorAll('*')).some(
-            (el) => el.textContent?.includes('Загрузка диаграммы')
-          );
-          const spinners = document.querySelectorAll('.ant-spin, [class*="spin"]');
-          const visibleSpinners = Array.from(spinners).some((spinner) => {
-            const style = window.getComputedStyle(spinner);
-            return style.display !== 'none' && style.visibility !== 'hidden';
-          });
-          const images = document.querySelectorAll('img[alt="PlantUML Diagram"]');
-          const loadedImages = Array.from(images).filter((img) => {
-            const htmlImg = img as HTMLImageElement;
-            return htmlImg.complete && htmlImg.naturalWidth > 0;
-          });
-          
-          return {
-            hasLoading: loadingTexts || visibleSpinners,
-            totalImages: images.length,
-            loadedImages: loadedImages.length,
-          };
-        });
-
-        if (diagramStatus.hasLoading) {
-          console.warn(`  ⚠️  Warning: Some diagrams may still be loading on slide ${slideNum}`);
-          // Wait a bit more
-          await delay(5000);
-        } else if (diagramStatus.totalImages > 0) {
-          console.log(`  ✓ All ${diagramStatus.loadedImages}/${diagramStatus.totalImages} diagrams loaded on slide ${slideNum}`);
-        } else {
-          console.log(`  ✓ No diagrams on slide ${slideNum}`);
-        }
+        await waitForPlantUMLDiagrams(page, 15000);
       }
       
       // Wait a bit more for any animations/transitions
-      await delay(1000);
+      await delay(500);
 
       // Generate PDF for this slide
       const slidePdf = await page.pdf({
@@ -430,12 +361,34 @@ const isMainModule = import.meta.url === `file://${process.argv[1]}` ||
 
 if (isMainModule) {
   const args = process.argv.slice(2);
-  const outputPath = args[0] || undefined;
+  let outputPath: string | undefined;
+  let maxSlides: number | undefined;
+
+  // Parse command line arguments
+  // Usage: npm run export:pdf -- [output-path] [--slides N]
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    
+    if (arg === '--slides' || arg === '-s') {
+      const slidesArg = args[i + 1];
+      if (slidesArg && !slidesArg.startsWith('-')) {
+        const parsed = parseInt(slidesArg, 10);
+        if (!isNaN(parsed) && parsed > 0) {
+          maxSlides = parsed;
+          i++; // Skip next argument as it's the value
+        }
+      }
+    } else if (!outputPath && !arg.startsWith('-') && arg !== '--') {
+      // First non-flag argument is the output path
+      outputPath = arg;
+    }
+  }
   
   exportPresentationToPDF({
     outputPath,
     useDevServer: true,
     waitForDiagrams: true,
+    maxSlides,
   })
     .then((path) => {
       console.log(`✅ PDF exported to: ${path}`);
