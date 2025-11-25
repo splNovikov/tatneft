@@ -25,8 +25,6 @@ skinparam defaultFontColor #000000
 
 ' Параметры для предотвращения наложения элементов
 skinparam padding 5
-skinparam defaultMinClassWidth 50
-skinparam defaultMinClassHeight 30
 
 ' ============================================
 ' Настройки для Activity диаграмм
@@ -48,8 +46,6 @@ skinparam activityBorderThickness 1
 skinparam activityArrowThickness 1
 skinparam activityStartEndSize 12
 skinparam activityBarSize 8
-skinparam activityMinWidth 80
-skinparam activityMinHeight 40
 
 skinparam activityDiamond {
     BackgroundColor #FFFFFF
@@ -65,12 +61,7 @@ skinparam partition {
     FontColor #000000
     FontSize 11
     FontStyle bold
-    Padding 10
 }
-
-' Минимальные размеры элементов для лучшего размещения текста
-skinparam minClassWidth 50
-skinparam minClassHeight 30
 
 ' ============================================
 ' Настройки для Sequence диаграмм
@@ -205,64 +196,11 @@ skinparam rectangle {
 ' ============================================
 ' Настройки для стрелок и связей
 ' ============================================
-skinparam arrow {
-    Color #000000
-    FontColor #000000
-    FontSize 10
-    FontStyle normal
-    Thickness 1
-}
+' Примечание: параметры стрелок настраиваются индивидуально
+' для каждого типа диаграммы (sequence, state, component и т.д.)
 
 ' ============================================
-' Настройки для легенды
+' Настройки для легенды, заголовков и заметок
 ' ============================================
-skinparam legend {
-    BackgroundColor #FFFFFF
-    BorderColor #000000
-    FontColor #000000
-    FontSize 9
-    FontStyle normal
-}
-
-' ============================================
-' Настройки для заголовков
-' ============================================
-skinparam title {
-    FontColor #000000
-    FontSize 14
-    FontStyle bold
-}
-
-' ============================================
-' Настройки для заметок
-' ============================================
-skinparam note {
-    BackgroundColor #FFFFCC
-    BorderColor #000000
-    FontColor #000000
-    FontSize 9
-    FontStyle italic
-}
-
-' ============================================
-' Настройки для Pie диаграмм
-' ============================================
-skinparam pie {
-    BackgroundColor #F5F5F5
-    BorderColor #000000
-    FontColor #000000
-    FontSize 10
-    FontStyle normal
-}
-
-' ============================================
-' Настройки для Package
-' ============================================
-skinparam package {
-    BackgroundColor #E8E8E8
-    BorderColor #000000
-    FontColor #000000
-    FontSize 10
-    FontStyle normal
-}
-
+' Примечание: некоторые параметры настраиваются через
+' соответствующие блоки в диаграммах (legend, title, note)

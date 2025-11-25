@@ -100,6 +100,11 @@ export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendere
         // Resolve !include directives
         code = await resolveIncludes(code, baseUrl);
 
+        // Debug: log first 500 chars of code to help diagnose issues
+        if (import.meta.env.DEV) {
+          console.log('PlantUML code (first 500 chars):', code.substring(0, 500));
+        }
+
         // Use kroki.io - alternative PlantUML service with CORS support
         // This service accepts POST requests and supports CORS, avoiding encoding issues
         try {
@@ -121,7 +126,15 @@ export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendere
               setImageUrl(blobUrl);
               setLoading(false);
               return;
+            } else {
+              // If not SVG, it might be an error message
+              console.error('Kroki.io SVG response:', svgText.substring(0, 500));
+              throw new Error(`PlantUML error: ${svgText.substring(0, 200)}`);
             }
+          } else {
+            const errorText = await response.text();
+            console.error('Kroki.io SVG error:', response.status, errorText);
+            throw new Error(`Kroki.io error (${response.status}): ${errorText.substring(0, 200)}`);
           }
           
           // If SVG failed, try PNG
@@ -140,10 +153,16 @@ export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendere
               setImageUrl(blobUrl);
               setLoading(false);
               return;
+            } else {
+              const errorText = await blob.text();
+              console.error('Kroki.io PNG error:', errorText);
+              throw new Error(`PlantUML PNG error: ${errorText.substring(0, 200)}`);
             }
+          } else {
+            const errorText = await pngResponse.text();
+            console.error('Kroki.io PNG error:', pngResponse.status, errorText);
+            throw new Error(`Kroki.io PNG error (${pngResponse.status}): ${errorText.substring(0, 200)}`);
           }
-          
-          throw new Error('Kroki.io returned invalid response');
         } catch (krokiError) {
           console.warn('Kroki.io failed:', krokiError);
           setError('Failed to render PlantUML diagram. The diagram service may be unavailable.');
