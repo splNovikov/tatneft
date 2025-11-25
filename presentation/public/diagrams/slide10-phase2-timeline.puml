@@ -1,9 +1,5 @@
 @startuml Slide10_Phase2_Timeline
-!theme plain
-skinparam activity {
-    BackgroundColor #FFF4E6
-    BorderColor #FFA500
-}
+!include gost-theme.puml
 
 title Фаза 2: Этапы разработки (6-9 месяцев)
 

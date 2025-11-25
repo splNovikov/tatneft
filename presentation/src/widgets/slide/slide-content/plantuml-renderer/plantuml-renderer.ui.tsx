@@ -8,6 +8,52 @@ interface PlantUMLRendererProps {
 }
 
 /**
+ * Resolves !include directives in PlantUML code
+ * Supports relative paths from diagrams/ directory
+ */
+async function resolveIncludes(code: string, baseUrl: string): Promise<string> {
+  const includeRegex = /^!include\s+(.+?)$/gm;
+  const includes: Array<{ match: string; path: string }> = [];
+  let match;
+
+  // Find all include directives
+  while ((match = includeRegex.exec(code)) !== null) {
+    includes.push({
+      match: match[0],
+      path: match[1].trim(),
+    });
+  }
+
+  // Resolve each include
+  for (const include of includes) {
+    try {
+      // Remove quotes if present
+      const includePath = include.path.replace(/^["']|["']$/g, '');
+      
+      // Load the included file
+      const response = await fetch(`${baseUrl}diagrams/${includePath}`);
+      if (!response.ok) {
+        console.warn(`Failed to load include file: ${includePath}`);
+        continue;
+      }
+      
+      const includedContent = await response.text();
+      
+      // Recursively resolve includes in the included file
+      const resolvedContent = await resolveIncludes(includedContent, baseUrl);
+      
+      // Replace the include directive with the file content
+      code = code.replace(include.match, resolvedContent);
+    } catch (err) {
+      console.warn(`Error resolving include ${include.path}:`, err);
+      // Keep the original include directive if loading fails
+    }
+  }
+
+  return code;
+}
+
+/**
  * Renders PlantUML diagram as an image
  */
 export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendererProps) {
@@ -22,12 +68,11 @@ export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendere
         setError(null);
 
         let code: string;
+        const baseUrl = import.meta.env.BASE_URL;
 
         // Load from file if path is provided
         if (plantumlPath) {
           try {
-            // Use import.meta.env.BASE_URL to support GitHub Pages base path
-            const baseUrl = import.meta.env.BASE_URL;
             const response = await fetch(`${baseUrl}diagrams/${plantumlPath}`);
             if (!response.ok) {
               throw new Error(`Failed to load PlantUML file: ${response.statusText}`);
@@ -51,6 +96,9 @@ export function PlantUMLRenderer({ plantumlCode, plantumlPath }: PlantUMLRendere
           setLoading(false);
           return;
         }
+
+        // Resolve !include directives
+        code = await resolveIncludes(code, baseUrl);
 
         // Use kroki.io - alternative PlantUML service with CORS support
         // This service accepts POST requests and supports CORS, avoiding encoding issues

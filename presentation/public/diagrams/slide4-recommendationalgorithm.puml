@@ -1,9 +1,5 @@
 @startuml Slide4_RecommendationAlgorithm
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
+!include gost-theme.puml
 
 title Алгоритм вычисления рекомендации
 

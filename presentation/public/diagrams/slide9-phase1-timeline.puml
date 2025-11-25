@@ -1,9 +1,5 @@
 @startuml Slide9_Phase1_Timeline
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
+!include gost-theme.puml
 
 title Фаза 1: Этапы разработки (9-12 месяцев)
 

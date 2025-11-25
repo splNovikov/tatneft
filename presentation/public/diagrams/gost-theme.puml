@@ -1,0 +1,268 @@
+' ============================================
+' Тема оформления диаграмм в стиле ГОСТ
+' ============================================
+' 
+' Использование:
+'   !include gost-theme.puml
+' 
+' Для переопределения параметров добавьте skinparam после include
+'
+' ============================================
+
+' Базовые настройки
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 10
+skinparam defaultFontStyle normal
+skinparam defaultTextAlignment left
+
+' Общие параметры оформления
+skinparam roundcorner 5
+skinparam shadowing false
+skinparam linetype ortho
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontColor #000000
+
+' Параметры для предотвращения наложения элементов
+skinparam padding 5
+skinparam defaultMinClassWidth 50
+skinparam defaultMinClassHeight 30
+
+' ============================================
+' Настройки для Activity диаграмм
+' ============================================
+skinparam activity {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+    StartColor #000000
+    EndColor #000000
+    BarColor #000000
+}
+
+' Отступы внутри блоков activity для предотвращения наложения стрелок на текст
+skinparam activityPadding 10
+skinparam activityBorderThickness 1
+skinparam activityArrowThickness 1
+skinparam activityStartEndSize 12
+skinparam activityBarSize 8
+skinparam activityMinWidth 80
+skinparam activityMinHeight 40
+
+skinparam activityDiamond {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+}
+
+skinparam partition {
+    BackgroundColor #E8E8E8
+    BorderColor #000000
+    FontColor #000000
+    FontSize 11
+    FontStyle bold
+    Padding 10
+}
+
+' Минимальные размеры элементов для лучшего размещения текста
+skinparam minClassWidth 50
+skinparam minClassHeight 30
+
+' ============================================
+' Настройки для Sequence диаграмм
+' ============================================
+skinparam sequence {
+    ArrowColor #000000
+    ArrowFontColor #000000
+    ArrowFontSize 10
+    ArrowFontStyle normal
+    ActorBackgroundColor #F5F5F5
+    ActorBorderColor #000000
+    ActorFontColor #000000
+    ActorFontSize 10
+    ActorFontStyle bold
+    LifeLineBackgroundColor #FFFFFF
+    LifeLineBorderColor #000000
+    ParticipantBackgroundColor #F5F5F5
+    ParticipantBorderColor #000000
+    ParticipantFontColor #000000
+    ParticipantFontSize 10
+    ParticipantFontStyle normal
+    BoxFontColor #000000
+    BoxFontSize 10
+    BoxFontStyle bold
+    BoxBackgroundColor #E8E8E8
+    BoxBorderColor #000000
+    NoteBackgroundColor #FFFFCC
+    NoteBorderColor #000000
+    NoteFontColor #000000
+    NoteFontSize 9
+    NoteFontStyle italic
+}
+
+skinparam sequenceMessageAlign center
+skinparam sequenceArrowThickness 2
+skinparam sequenceLifeLineBorderThickness 1
+
+' ============================================
+' Настройки для State диаграмм
+' ============================================
+skinparam state {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+    StartColor #000000
+    EndColor #000000
+    ArrowColor #000000
+    ArrowFontColor #000000
+    ArrowFontSize 10
+    ArrowFontStyle normal
+}
+
+' ============================================
+' Настройки для Component диаграмм
+' ============================================
+skinparam component {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+    ArrowColor #000000
+    ArrowFontColor #000000
+    ArrowFontSize 10
+    ArrowFontStyle normal
+}
+
+skinparam componentStyle rectangle
+
+' ============================================
+' Настройки для Class диаграмм
+' ============================================
+skinparam class {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+    ArrowColor #000000
+    ArrowFontColor #000000
+    ArrowFontSize 10
+    ArrowFontStyle normal
+    AttributeFontColor #000000
+    AttributeFontSize 9
+    AttributeFontStyle normal
+    MethodFontColor #000000
+    MethodFontSize 9
+    MethodFontStyle normal
+}
+
+' ============================================
+' Настройки для Use Case диаграмм
+' ============================================
+skinparam usecase {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+    ArrowColor #000000
+    ArrowFontColor #000000
+    ArrowFontSize 10
+    ArrowFontStyle normal
+    ActorBackgroundColor #F5F5F5
+    ActorBorderColor #000000
+    ActorFontColor #000000
+    ActorFontSize 10
+    ActorFontStyle bold
+}
+
+' ============================================
+' Настройки для Person/System (C4-like)
+' ============================================
+skinparam person {
+    BackgroundColor #E8F4F8
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+}
+
+skinparam rectangle {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+}
+
+' ============================================
+' Настройки для стрелок и связей
+' ============================================
+skinparam arrow {
+    Color #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+    Thickness 1
+}
+
+' ============================================
+' Настройки для легенды
+' ============================================
+skinparam legend {
+    BackgroundColor #FFFFFF
+    BorderColor #000000
+    FontColor #000000
+    FontSize 9
+    FontStyle normal
+}
+
+' ============================================
+' Настройки для заголовков
+' ============================================
+skinparam title {
+    FontColor #000000
+    FontSize 14
+    FontStyle bold
+}
+
+' ============================================
+' Настройки для заметок
+' ============================================
+skinparam note {
+    BackgroundColor #FFFFCC
+    BorderColor #000000
+    FontColor #000000
+    FontSize 9
+    FontStyle italic
+}
+
+' ============================================
+' Настройки для Pie диаграмм
+' ============================================
+skinparam pie {
+    BackgroundColor #F5F5F5
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+}
+
+' ============================================
+' Настройки для Package
+' ============================================
+skinparam package {
+    BackgroundColor #E8E8E8
+    BorderColor #000000
+    FontColor #000000
+    FontSize 10
+    FontStyle normal
+}
+

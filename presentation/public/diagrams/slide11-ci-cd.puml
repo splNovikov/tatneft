@@ -1,9 +1,5 @@
 @startuml Slide11_CI_CD
-!theme plain
-skinparam activity {
-    BackgroundColor #E8F4F8
-    BorderColor #2E5C8A
-}
+!include gost-theme.puml
 
 title Процесс CI/CD
 

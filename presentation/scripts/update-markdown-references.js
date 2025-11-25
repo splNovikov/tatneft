@@ -90,3 +90,4 @@ fs.writeFileSync(outputFile, result.join('\n'), 'utf-8');
 console.log(`✓ Updated ${outputFile}`);
 console.log(`  Replaced PlantUML blocks with references to .puml files`);
 
+

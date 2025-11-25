@@ -1,6 +1,5 @@
 @startuml Slide5_Notifications
-!theme plain
-skinparam sequenceMessageAlign center
+!include gost-theme.puml
 
 participant "Система" as System
 participant "Мастер\nЦДНГ" as Master

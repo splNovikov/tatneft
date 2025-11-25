@@ -1,6 +1,5 @@
 @startuml Slide3_SignalFlow
-!theme plain
-skinparam sequenceMessageAlign center
+!include gost-theme.puml
 
 actor "Диспетчер\nЕДС" as Dispatcher
 participant "ЕССД/\nАСДКУ" as ESSD

@@ -1,9 +1,5 @@
 @startuml Slide1_CurrentProcess
-!theme plain
-skinparam activity {
-    BackgroundColor #FFE6E6
-    BorderColor #CC0000
-}
+!include gost-theme.puml
 
 title Текущий ручной процесс анализа
 

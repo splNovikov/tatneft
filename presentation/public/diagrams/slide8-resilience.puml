@@ -1,6 +1,5 @@
 @startuml Slide8_Resilience
-!theme plain
-skinparam componentStyle rectangle
+!include gost-theme.puml
 
 package "Load Balancer" {
   component [Load Balancer] as LB

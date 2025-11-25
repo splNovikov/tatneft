@@ -1,6 +1,5 @@
 @startuml Slide6_DecisionProcess
-!theme plain
-skinparam sequenceMessageAlign center
+!include gost-theme.puml
 
 participant "Мастер\nЦДНГ" as Master
 participant "Руководство\nЦДНГ" as Manager
@@ -15,7 +14,7 @@ Master -> Manager: Информирование\nо рекомендации
 Manager -> System: Просмотр деталей\nрекомендации
 System --> Manager: Обоснование, расчеты
 
-Manager -> System: Принятие решения\n✅ Принять
+Manager -> System: Принятие решения\n Принять
 System -> System: Статус: accepted
 
 Manager -> PC: Заявка на изменение\nуставок в АСУТП
