@@ -1,0 +1,18 @@
+@startuml Slide10_Phase2_Timeline_Part2
+!include gost-theme.puml
+
+partition "ML инфраструктура\n(5-6 недель)" {
+  :ML Pipeline;
+  :Версионирование моделей;
+  :MLflow/Kubeflow;
+}
+
+partition "Разработка моделей\n(9-12 недель)" {
+  :Обучение моделей;
+  :Валидация;
+  :Оптимизация гиперпараметров;
+  :A/B тестирование;
+}
+
+@enduml
+

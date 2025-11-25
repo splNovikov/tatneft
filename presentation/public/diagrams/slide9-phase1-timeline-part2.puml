@@ -1,0 +1,19 @@
+@startuml Slide9_Phase1_Timeline_Part2
+!include gost-theme.puml
+
+partition "Разработка алгоритмов\n(6-8 недель)" {
+  :Trend Analyzer;
+  :Threshold Validator;
+  :Recommendation Generator;
+  :Модульные тесты;
+}
+
+partition "Разработка интерфейсов\n(6-8 недель)" {
+  :Веб-интерфейс;
+  :Дашборды;
+  :Страницы анализа;
+  :Компонентные тесты;
+}
+
+@enduml
+
