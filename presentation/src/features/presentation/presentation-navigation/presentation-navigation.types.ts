@@ -8,6 +8,3 @@ export interface UsePresentationNavigationReturn {
   canGoNext: boolean;
   canGoPrevious: boolean;
 }
-
-
-

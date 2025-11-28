@@ -1,6 +1,10 @@
 import { Typography } from 'antd';
 import type { SlideContent } from '~shared/lib/presentation.types';
-import { renderMarkdownText, parseMarkdownTable, parseMarkdownList } from './slide-content.lib';
+import {
+  renderMarkdownText,
+  parseMarkdownTable,
+  parseMarkdownList,
+} from './slide-content.lib';
 import { PlantUMLRenderer } from './plantuml-renderer';
 import { PhaseDiagramRenderer } from './phase-diagram-renderer';
 import styles from './slide-content.module.css';
@@ -25,16 +29,19 @@ export function SlideContentRenderer({ content }: SlideContentProps) {
 
     case 'code': {
       // Check if it's a phase diagram (contains phases with boxes)
-      const isPhaseDiagram = content.content.includes('ФАЗА') && 
-                             (content.content.includes('┌──') || content.content.includes('─'));
-      
+      const isPhaseDiagram =
+        content.content.includes('ФАЗА') &&
+        (content.content.includes('┌──') || content.content.includes('─'));
+
       if (isPhaseDiagram) {
         return <PhaseDiagramRenderer content={content.content} />;
       }
-      
+
       return (
         <pre className={styles.codeBlock}>
-          <code className={content.language ? `language-${content.language}` : ''}>
+          <code
+            className={content.language ? `language-${content.language}` : ''}
+          >
             {content.content}
           </code>
         </pre>
@@ -61,14 +68,15 @@ export function SlideContentRenderer({ content }: SlideContentProps) {
 
     case 'diagram':
       // Check if it's PlantUML code
-      const isPlantUML = content.content.includes('@startuml') || 
-                        content.content.includes('@enduml') ||
-                        content.content.trim().toLowerCase().includes('plantuml');
-      
+      const isPlantUML =
+        content.content.includes('@startuml') ||
+        content.content.includes('@enduml') ||
+        content.content.trim().toLowerCase().includes('plantuml');
+
       if (isPlantUML) {
         return <PlantUMLRenderer plantumlCode={content.content} />;
       }
-      
+
       // Fallback for other diagram types
       return (
         <div className={styles.diagramWrapper}>
@@ -87,4 +95,3 @@ export function SlideContentRenderer({ content }: SlideContentProps) {
       );
   }
 }
-

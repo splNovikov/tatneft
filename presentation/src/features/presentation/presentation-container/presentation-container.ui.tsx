@@ -4,7 +4,10 @@ import ErrorHandler, { logError } from '~shared/ui/error-handler';
 import Spinner from '~shared/ui/spinner';
 import { CompanyLogo } from '~shared/ui/company-logo';
 import { Slide } from '~widgets/slide';
-import { PresentationNavigation, usePresentationNavigation } from '../presentation-navigation';
+import {
+  PresentationNavigation,
+  usePresentationNavigation,
+} from '../presentation-navigation';
 import type { Presentation } from '~shared/lib/presentation.types';
 import styles from './presentation-container.module.css';
 
@@ -15,7 +18,9 @@ interface PresentationContainerProps {
 /**
  * Main presentation container with navigation
  */
-export function PresentationContainer({ presentation }: PresentationContainerProps) {
+export function PresentationContainer({
+  presentation,
+}: PresentationContainerProps) {
   const [isNavigationVisible, setIsNavigationVisible] = useState(true);
   const navigation = usePresentationNavigation({
     totalSlides: presentation.slides.length,
@@ -41,16 +46,16 @@ export function PresentationContainer({ presentation }: PresentationContainerPro
             <Slide slide={currentSlideData} />
           </Suspense>
         </div>
-        
+
         {isNavigationVisible ? (
-          <PresentationNavigation 
-            navigation={navigation} 
+          <PresentationNavigation
+            navigation={navigation}
             totalSlides={presentation.slides.length}
             onClose={() => setIsNavigationVisible(false)}
           />
         ) : (
           <div className={styles.navigationToggle}>
-            <button 
+            <button
               className={styles.showNavigationButton}
               onClick={() => setIsNavigationVisible(true)}
               title="Показать навигацию"
@@ -63,4 +68,3 @@ export function PresentationContainer({ presentation }: PresentationContainerPro
     </ErrorBoundary>
   );
 }
-

@@ -64,7 +64,7 @@ export function Slide({ slide }: SlideProps) {
           );
           i++;
         }
-        
+
         if (textElements.length > 0) {
           elements.push(
             <div key="goal-text" className={styles.goalContainer}>
@@ -91,9 +91,8 @@ export function Slide({ slide }: SlideProps) {
           {slide.title}
         </Title>
       </div>
-      
+
       <div className={styles.slideContent}>{renderContent()}</div>
     </div>
   );
 }
-

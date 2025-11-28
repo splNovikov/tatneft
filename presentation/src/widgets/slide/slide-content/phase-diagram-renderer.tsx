@@ -18,17 +18,17 @@ interface Phase {
 function parsePhaseDiagram(content: string): Phase[] {
   const phases: Phase[] = [];
   const lines = content.split('\n');
-  
+
   let currentPhase: Phase | null = null;
-  
+
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     // Skip empty lines and arrows
     if (!trimmed || trimmed === '↓' || trimmed.match(/^─+$/)) {
       continue;
     }
-    
+
     // Extract phase title (ФАЗА 1: ... or ФАЗА 2: ...)
     const phaseMatch = trimmed.match(/ФАЗА\s*(\d+):\s*(.+)/);
     if (phaseMatch) {
@@ -42,21 +42,24 @@ function parsePhaseDiagram(content: string): Phase[] {
       };
       continue;
     }
-    
+
     // Extract list items (• ...) - can be inside or outside box
     if (currentPhase && trimmed.includes('•')) {
       const itemMatch = trimmed.match(/[•*]\s*(.+)/);
       if (itemMatch) {
         const itemText = itemMatch[1].trim();
         // Clean up box characters
-        const cleanItem = itemText.replace(/^│\s*/, '').replace(/\s*│$/, '').trim();
+        const cleanItem = itemText
+          .replace(/^│\s*/, '')
+          .replace(/\s*│$/, '')
+          .trim();
         if (cleanItem) {
           currentPhase.items.push(cleanItem);
         }
       }
       continue;
     }
-    
+
     // End of box
     if (trimmed.includes('└──')) {
       if (currentPhase && currentPhase.items.length > 0) {
@@ -65,12 +68,12 @@ function parsePhaseDiagram(content: string): Phase[] {
       }
     }
   }
-  
+
   // Add last phase if exists
   if (currentPhase) {
     phases.push(currentPhase);
   }
-  
+
   return phases;
 }
 
@@ -79,7 +82,7 @@ function parsePhaseDiagram(content: string): Phase[] {
  */
 export function PhaseDiagramRenderer({ content }: PhaseDiagramRendererProps) {
   const phases = parsePhaseDiagram(content);
-  
+
   if (phases.length === 0) {
     // Fallback to regular code block
     return (
@@ -88,7 +91,7 @@ export function PhaseDiagramRenderer({ content }: PhaseDiagramRendererProps) {
       </pre>
     );
   }
-  
+
   return (
     <div className={styles.phaseDiagramContainer}>
       {phases.map((phase, index) => (
@@ -113,4 +116,3 @@ export function PhaseDiagramRenderer({ content }: PhaseDiagramRendererProps) {
     </div>
   );
 }
-

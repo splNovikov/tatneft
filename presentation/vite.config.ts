@@ -5,7 +5,10 @@ import { defineConfig } from 'vite';
 // https://vite.dev/config/
 export default defineConfig({
   // Base path for GitHub Pages: /tatneft/ for deployment, / for local development
-  base: process.env.GITHUB_PAGES === 'true' || process.env.CI === 'true' ? '/tatneft/' : '/',
+  base:
+    process.env.GITHUB_PAGES === 'true' || process.env.CI === 'true'
+      ? '/tatneft/'
+      : '/',
   plugins: [react()],
   resolve: {
     alias: {

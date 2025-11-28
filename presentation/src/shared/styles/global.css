@@ -119,9 +119,9 @@
 /* === PRINT STYLES === */
 @media print {
   /* Hide navigation and UI elements */
-  [class*="navigation"],
-  [class*="navigationToggle"],
-  [class*="companyLogo"] {
+  [class*='navigation'],
+  [class*='navigationToggle'],
+  [class*='companyLogo'] {
     display: none !important;
   }
 
@@ -133,8 +133,8 @@
   }
 
   /* Ensure slides take full page */
-  [class*="slide"],
-  [class*="titleSlide"] {
+  [class*='slide'],
+  [class*='titleSlide'] {
     page-break-after: always;
     page-break-inside: avoid;
     margin: 0;
@@ -142,8 +142,8 @@
   }
 
   /* Prevent content from breaking across pages */
-  [class*="slideContent"],
-  [class*="slideHeader"] {
+  [class*='slideContent'],
+  [class*='slideHeader'] {
     page-break-inside: avoid;
   }
 

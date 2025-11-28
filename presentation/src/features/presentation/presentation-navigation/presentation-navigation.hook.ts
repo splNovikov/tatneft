@@ -88,4 +88,3 @@ export function usePresentationNavigation({
     canGoPrevious: currentSlide > 1,
   };
 }
-

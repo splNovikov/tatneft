@@ -76,7 +76,7 @@ function startDevServer(port: number = 5173): Promise<ChildProcess> {
 /**
  * Waits for PlantUML diagrams to load on the current slide
  */
-async function waitForPlantUMLDiagrams(page: Page, timeout: number = 10000): Promise<void> {
+async function waitForPlantUMLDiagrams(page: Page, timeout: number = 20000): Promise<void> {
   try {
     // Wait for all PlantUML images to load
     await page.waitForFunction(
@@ -84,13 +84,31 @@ async function waitForPlantUMLDiagrams(page: Page, timeout: number = 10000): Pro
         const images = document.querySelectorAll('img[alt="PlantUML Diagram"]');
         if (images.length === 0) return true; // No diagrams, we're done
         
-        return Array.from(images).every((img) => {
+        // Check that all images are loaded and have content
+        const allLoaded = Array.from(images).every((img) => {
           const htmlImg = img as HTMLImageElement;
-          return htmlImg.complete && htmlImg.naturalWidth > 0;
+          // Image must be complete, have dimensions, and not be in error state
+          return htmlImg.complete && 
+                 htmlImg.naturalWidth > 0 && 
+                 htmlImg.naturalHeight > 0 &&
+                 !htmlImg.src.includes('data:image/svg+xml;base64,PHN2Zz48L3N2Zz4='); // Not empty SVG
         });
+        
+        return allLoaded;
       },
-      { timeout }
+      { timeout, polling: 500 } // Check every 500ms
     );
+    
+    // Additional verification - check that images are actually visible
+    const imagesLoaded = await page.evaluate(() => {
+      const images = document.querySelectorAll('img[alt="PlantUML Diagram"]');
+      return Array.from(images).filter((img) => {
+        const htmlImg = img as HTMLImageElement;
+        return htmlImg.complete && htmlImg.naturalWidth > 0;
+      }).length;
+    });
+    
+    console.log(`  ${imagesLoaded} diagram(s) loaded on slide`);
   } catch (error) {
     console.warn('Timeout waiting for diagrams, continuing anyway...');
   }
@@ -289,9 +307,18 @@ export async function exportPresentationToPDF(options: ExportOptions = {}): Prom
       // Navigate to slide
       await navigateToSlide(page, slideNum, totalSlides);
       
+      // Give time for diagrams to start loading
+      await delay(1000);
+      
       // Wait for diagrams if needed
       if (waitForDiagrams) {
-        await waitForPlantUMLDiagrams(page, 15000);
+        console.log(`  Waiting for PlantUML diagrams on slide ${slideNum}...`);
+        await waitForPlantUMLDiagrams(page, 20000); // Increased timeout to 20 seconds
+        
+        // Additional wait after diagrams are loaded to ensure they're fully rendered
+        // This prevents empty spaces in PDF
+        console.log(`  Diagrams loaded, waiting 5 seconds for full rendering...`);
+        await delay(5000);
       }
       
       // Wait a bit more for any animations/transitions

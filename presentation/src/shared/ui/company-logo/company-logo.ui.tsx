@@ -20,15 +20,10 @@ export function CompanyLogo() {
   return (
     <div className={styles.logoContainer}>
       {imageLoaded && !imageError ? (
-        <img 
-          src="/logo-proxima.png" 
-          alt="ПРОКСИМА" 
-          className={styles.logo}
-        />
+        <img src="/logo-proxima.png" alt="ПРОКСИМА" className={styles.logo} />
       ) : (
         <div className={styles.logoText}>ПРОКСИМА</div>
       )}
     </div>
   );
 }
-

@@ -1,20 +1,27 @@
-import type { Presentation, Slide, SlideContent, PresentationMetadata } from './presentation.types';
+import type {
+  Presentation,
+  Slide,
+  SlideContent,
+  PresentationMetadata,
+} from './presentation.types';
 
 /**
  * Parses markdown content into presentation structure
  */
 export function parsePresentation(markdown: string): Presentation {
   const lines = markdown.split('\n');
-  
+
   // Extract metadata from the beginning
   const metadata = extractMetadata(lines);
-  
+
   // Split into slides (separated by ---)
   const slideSections = splitIntoSlides(lines);
-  
+
   // Parse each slide
-  const slides = slideSections.map((section, index) => parseSlide(section, index + 1));
-  
+  const slides = slideSections.map((section, index) =>
+    parseSlide(section, index + 1)
+  );
+
   return {
     metadata,
     slides,
@@ -31,11 +38,11 @@ function extractMetadata(lines: string[]): PresentationMetadata {
     date: '',
     phase: '',
   };
-  
+
   let i = 0;
   while (i < lines.length && i < 10) {
     const line = lines[i].trim();
-    
+
     if (line.startsWith('# ')) {
       metadata.title = line.replace(/^#+\s*/, '');
     } else {
@@ -43,16 +50,16 @@ function extractMetadata(lines: string[]): PresentationMetadata {
       const versionMatch = line.match(/\*\*Версия:\*\*\s*(.+)/);
       const dateMatch = line.match(/\*\*Дата:\*\*\s*(.+)/);
       const phaseMatch = line.match(/\*\*Этап\s*\d+:\s*(.+)/);
-      
+
       if (versionMatch) metadata.version = versionMatch[1].trim();
       if (dateMatch) metadata.date = dateMatch[1].trim();
       if (phaseMatch) metadata.phase = phaseMatch[1].trim();
     }
-    
+
     if (line === '---') break;
     i++;
   }
-  
+
   return {
     title: metadata.title || 'Презентация',
     version: metadata.version || '1.0',
@@ -68,18 +75,18 @@ function splitIntoSlides(lines: string[]): string[][] {
   const slides: string[][] = [];
   let currentSlide: string[] = [];
   let inSlide = false;
-  
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    
+
     // Skip metadata section (before first ---)
     if (!inSlide && line.trim() === '---') {
       inSlide = true;
       continue;
     }
-    
+
     if (!inSlide) continue;
-    
+
     // New slide starts with ## Слайд
     if (line.match(/^##\s+Слайд\s+\d+:/)) {
       if (currentSlide.length > 0) {
@@ -94,12 +101,12 @@ function splitIntoSlides(lines: string[]): string[][] {
       currentSlide.push(line);
     }
   }
-  
+
   // Add last slide
   if (currentSlide.length > 0) {
     slides.push(currentSlide);
   }
-  
+
   return slides;
 }
 
@@ -115,29 +122,30 @@ function parseSlide(section: string[], slideNumber: number): Slide {
   let inTable = false;
   let currentList: string[] = [];
   let inList = false;
-  
+
   let title = `Слайд ${slideNumber}`;
-  
+
   for (let i = 0; i < section.length; i++) {
     const line = section[i];
     const trimmed = line.trim();
-    
+
     // Extract title from first ## heading
     if (i === 0 && trimmed.startsWith('## ')) {
       title = trimmed.replace(/^##+\s*/, '').trim();
       continue;
     }
-    
+
     // Code blocks
     if (trimmed.startsWith('```')) {
       if (inCodeBlock) {
         // End of code block
         const code = currentCodeBlock.join('\n');
         // Check if it's a PlantUML diagram
-        const isPlantUML = codeLanguage.toLowerCase() === 'plantuml' || 
-                          code.includes('@startuml') || 
-                          code.includes('@enduml');
-        
+        const isPlantUML =
+          codeLanguage.toLowerCase() === 'plantuml' ||
+          code.includes('@startuml') ||
+          code.includes('@enduml');
+
         if (isPlantUML) {
           // Check if it's a reference to a .puml file
           // Format: ```plantuml
@@ -174,12 +182,12 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       }
       continue;
     }
-    
+
     if (inCodeBlock) {
       currentCodeBlock.push(line);
       continue;
     }
-    
+
     // Tables
     if (trimmed.includes('|') && trimmed.split('|').length > 2) {
       if (!inTable) {
@@ -197,7 +205,7 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       currentTable = [];
       inTable = false;
     }
-    
+
     // Lists
     if (trimmed.match(/^[-*]\s/) || trimmed.match(/^\d+\.\s/)) {
       if (!inList) {
@@ -221,7 +229,7 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       }
       continue;
     }
-    
+
     // Headings
     // Handle ## headings (level 2) that are not the slide title
     if (trimmed.startsWith('## ') && i > 0) {
@@ -231,7 +239,7 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       });
       continue;
     }
-    
+
     // Handle ### headings (level 3)
     if (trimmed.startsWith('### ')) {
       content.push({
@@ -240,7 +248,7 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       });
       continue;
     }
-    
+
     // Regular text
     if (trimmed && !trimmed.startsWith('#')) {
       // Check if it's a diagram (plantuml)
@@ -262,14 +270,14 @@ function parseSlide(section: string[], slideNumber: number): Slide {
         i = j;
         continue;
       }
-      
+
       content.push({
         type: 'text',
         content: trimmed,
       });
     }
   }
-  
+
   // Close any open blocks
   if (inCodeBlock && currentCodeBlock.length > 0) {
     content.push({
@@ -278,21 +286,21 @@ function parseSlide(section: string[], slideNumber: number): Slide {
       language: codeLanguage || undefined,
     });
   }
-  
+
   if (inTable && currentTable.length > 0) {
     content.push({
       type: 'table',
       content: currentTable.join('\n'),
     });
   }
-  
+
   if (inList && currentList.length > 0) {
     content.push({
       type: 'list',
       content: currentList.join('\n'),
     });
   }
-  
+
   return {
     id: slideNumber,
     title,
@@ -300,4 +308,3 @@ function parseSlide(section: string[], slideNumber: number): Slide {
     rawMarkdown: section.join('\n'),
   };
 }
-

@@ -22,7 +22,9 @@ export default function PresentationPage() {
         const data = await loadPresentationData();
         setPresentation(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load presentation');
+        setError(
+          err instanceof Error ? err.message : 'Failed to load presentation'
+        );
         console.error('Error loading presentation:', err);
       } finally {
         setLoading(false);
@@ -63,4 +65,3 @@ export default function PresentationPage() {
     </ErrorBoundary>
   );
 }
-

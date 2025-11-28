@@ -20,12 +20,16 @@ export const routesManifest: RouteManifestEntry[] = [
   {
     path: pathKeys.presentation,
     loader: () =>
-      import('~pages/presentation/presentation-page.route').then(m => m.presentationPageRoute),
+      import('~pages/presentation/presentation-page.route').then(
+        m => m.presentationPageRoute
+      ),
   },
   {
     path: pathKeys.root,
     loader: () =>
-      import('~pages/presentation/presentation-page.route').then(m => m.presentationPageRoute),
+      import('~pages/presentation/presentation-page.route').then(
+        m => m.presentationPageRoute
+      ),
   },
   {
     path: pathKeys.page404,

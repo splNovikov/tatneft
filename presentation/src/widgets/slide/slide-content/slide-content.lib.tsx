@@ -106,7 +106,7 @@ export function parseMarkdownTable(markdown: string): ReactNode {
       .split('|')
       .map(c => c.trim())
       .filter(c => c);
-    
+
     const record: Record<string, string> = { key: String(index) };
     headers.forEach((header, i) => {
       record[header] = cells[i] || '';
@@ -141,24 +141,16 @@ export function parseMarkdownList(markdown: string): ReactNode {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    
+
     // Unordered list
     if (trimmed.match(/^[-*]\s/)) {
       const text = trimmed.replace(/^[-*]\s+/, '');
-      items.push(
-        <li key={items.length}>
-          {renderMarkdownText(text)}
-        </li>
-      );
+      items.push(<li key={items.length}>{renderMarkdownText(text)}</li>);
     }
     // Ordered list
     else if (trimmed.match(/^\d+\.\s/)) {
       const text = trimmed.replace(/^\d+\.\s+/, '');
-      items.push(
-        <li key={items.length}>
-          {renderMarkdownText(text)}
-        </li>
-      );
+      items.push(<li key={items.length}>{renderMarkdownText(text)}</li>);
     }
   }
 
@@ -170,4 +162,3 @@ export function parseMarkdownList(markdown: string): ReactNode {
   }
   return <ul className="markdown-list">{items}</ul>;
 }
-

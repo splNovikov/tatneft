@@ -1,5 +1,11 @@
 import { Button, Progress } from 'antd';
-import { LeftOutlined, RightOutlined, HomeOutlined, ToTopOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+  LeftOutlined,
+  RightOutlined,
+  HomeOutlined,
+  ToTopOutlined,
+  CloseOutlined,
+} from '@ant-design/icons';
 import type { UsePresentationNavigationReturn } from './presentation-navigation.types';
 import styles from './presentation-navigation.module.css';
 
@@ -22,7 +28,7 @@ export function PresentationNavigation({
   return (
     <div className={styles.navigation}>
       {onClose && (
-        <button 
+        <button
           className={styles.closeButton}
           onClick={onClose}
           title="Скрыть навигацию"
@@ -39,7 +45,7 @@ export function PresentationNavigation({
         >
           Начало
         </Button>
-        
+
         <Button
           icon={<LeftOutlined />}
           onClick={navigation.previousSlide}
@@ -48,11 +54,11 @@ export function PresentationNavigation({
         >
           Назад
         </Button>
-        
+
         <div className={styles.slideCounter}>
           {navigation.currentSlide} / {totalSlides}
         </div>
-        
+
         <Button
           icon={<RightOutlined />}
           onClick={navigation.nextSlide}
@@ -61,7 +67,7 @@ export function PresentationNavigation({
         >
           Вперед
         </Button>
-        
+
         <Button
           icon={<ToTopOutlined />}
           onClick={navigation.goToLast}
@@ -71,18 +77,17 @@ export function PresentationNavigation({
           Конец
         </Button>
       </div>
-      
+
       <Progress
         percent={progress}
         showInfo={false}
         strokeColor="#020a1c"
         className={styles.progress}
       />
-      
+
       <div className={styles.hint}>
         Используйте стрелки ← → или пробел для навигации
       </div>
     </div>
   );
 }
-
